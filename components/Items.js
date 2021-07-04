@@ -1,12 +1,12 @@
 import React, {useState} from 'react'
-import {View, Text, StyleSheet, Platform, KeyboardAvoidingView,TextInput, Pressable, ScrollView, FlatList, Alert, Image } from 'react-native'
+import {View, Text, StyleSheet, Platform, KeyboardAvoidingView,TextInput, Pressable, ScrollView, Alert, Image } from 'react-native'
 import Task from './Task'
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
 const Items = () => {
-    const [itemName, setItemName] = useState({name: '', image: Image, code: '', id: Number})
+    const [itemName, setItemName] = useState({name: String, image: String, code: String, id: Number})
     const [list, setList ] = useState([])
-    const [iD, setId] = useState()
+    const [iD, setId] = useState(0)
     const [toggle, setToggle] = useState(false)
 
 
@@ -14,15 +14,23 @@ const Items = () => {
      const AddItem = () => {
          setId(iD +1)
          setItemName({...itemName, id: iD})
-         {itemName && iD != null ? setList([...list, itemName]) : Alert.alert("You cant add empty object")}
+         console.log(itemName)
+         {itemName && iD != '' ? setList([...list, itemName]) : Alert.alert("You cant add empty object")}
          setItemName(null)
         console.log(list)
     }
 
     return(
         <View>
-                {/* ITEMEIDEN LISÄYS */}
-            <View style={{flex:1, justifyContent: 'space-evenly' }}>
+            <View style={{flex:2, justifyContent:'center', alignItems:'center', marginTop:100, borderWidth:1, width: vw(60), height:vh(7)}}>
+                <Pressable onPress={() => setToggle(!toggle)}>
+                    <Text>
+                        Lisää uusi laite
+                    </Text>
+                </Pressable>
+            </View>
+            
+            {toggle === true ? <View style={{flex:4, justifyContent: 'space-evenly' }}>
                 <View  style={styles.Add}>
                     <Text>Lisää laitteen nimi</Text>
                         <TextInput value={itemName} onChangeText={text => setItemName({...itemName, name: text})} />
@@ -42,20 +50,25 @@ const Items = () => {
                                 </Text>
                         </Pressable>
             </View>
-            <ScrollView style={{flex: 4}} fadingEdgeLength={250}>
-                <KeyboardAvoidingView
-                behavior={Platform.OS == 'ios' ? "padding" : "height"}
-                >
-                    {/* LISTATUT ITEMIT */}
-                </KeyboardAvoidingView>
-                <View >
-                        {list.map((item) =>{
-                        return  <View style={styles.items} key={item.id}>
-                                    <Task item={item} />
-                                </View>
-                        })}
-                </View>
-            </ScrollView>
+                :
+                <ScrollView style={{flex: 4}} fadingEdgeLength={200}>
+                    <KeyboardAvoidingView
+                    behavior={Platform.OS == 'ios' ? "padding" : "height"}
+                    >
+                        {/* LISTATUT ITEMIT */}
+                    </KeyboardAvoidingView>
+                    <View >
+                            {list.map((item) =>{
+                            return  <View style={styles.items} key={item.id}>
+                                        <Task item={item} />
+                                    </View>
+                            })}
+                    </View>
+                </ScrollView>
+                }
+                {/* ITEMEIDEN LISÄYS */}
+            
+            
         </View>
     ) 
 }
