@@ -26,7 +26,7 @@ export default function Scanner() {
   }
 
   return (
-    <View style={{justifyContent: 'center'}}>
+    <View style={{justifyContent: 'center', flex: 1}}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}

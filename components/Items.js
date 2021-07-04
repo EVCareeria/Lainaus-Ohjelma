@@ -2,27 +2,26 @@ import React, {useState} from 'react'
 import {View, Text, StyleSheet, Platform, KeyboardAvoidingView,TextInput, Pressable, ScrollView, Alert, Image } from 'react-native'
 import Task from './Task'
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+import uuid from 'react-native-uuid';
 
 const Items = () => {
     const [itemName, setItemName] = useState({name: String, image: String, code: String, id: Number})
     const [list, setList ] = useState([])
-    const [iD, setId] = useState(0)
     const [toggle, setToggle] = useState(false)
-
+    let iD = uuid.v1()
 
 
      const AddItem = () => {
-         setId(iD +1)
          setItemName({...itemName, id: iD})
          console.log(itemName)
-         {itemName && iD != '' ? setList([...list, itemName]) : Alert.alert("You cant add empty object")}
+         {itemName && iD != null ? setList([...list, itemName]) : Alert.alert("You cant add empty object")}
          setItemName(null)
         console.log(list)
     }
 
     return(
-        <View>
-            <View style={{flex:2, justifyContent:'center', alignItems:'center', marginTop:100, borderWidth:1, width: vw(60), height:vh(7)}}>
+        <View style={{flex: 6, backgroundColor: "#b5800d"}}>
+            <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:50, borderWidth:1, width: vw(100), height:vh(5)}}>
                 <Pressable onPress={() => setToggle(!toggle)}>
                     <Text>
                         Lisää uusi laite
@@ -30,7 +29,7 @@ const Items = () => {
                 </Pressable>
             </View>
             
-            {toggle === true ? <View style={{flex:4, justifyContent: 'space-evenly' }}>
+            {toggle === true ? <View style={{flex:4, justifyContent: 'space-evenly', justifyContent: 'center', alignItems:'center' }}>
                 <View  style={styles.Add}>
                     <Text>Lisää laitteen nimi</Text>
                         <TextInput value={itemName} onChangeText={text => setItemName({...itemName, name: text})} />
@@ -44,7 +43,7 @@ const Items = () => {
                         <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} />
                         
                 </View>
-                <Pressable onPress={() => AddItem()} style={{justifyContent:'center', alignSelf:'center', borderRadius:2, borderWidth:1, width: vw(30), height: vh(4), alignItems:'center', backgroundColor:'white'}}>
+                <Pressable onPress={() => AddItem()} style={{justifyContent:'center', alignSelf:'center', borderRadius:2, borderWidth:1, width: vw(30), height: vh(4), alignItems:'center', backgroundColor:'white', margin: 10}}>
                                 <Text>
                                     Lisää tuote
                                 </Text>
@@ -57,7 +56,7 @@ const Items = () => {
                     >
                         {/* LISTATUT ITEMIT */}
                     </KeyboardAvoidingView>
-                    <View >
+                    <View style={{justifyContent:'center', alignItems:'center'}} >
                             {list.map((item) =>{
                             return  <View style={styles.items} key={item.id}>
                                         <Task item={item} />
