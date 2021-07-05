@@ -2,12 +2,12 @@ import React, {useState} from 'react'
 import {View, Text, StyleSheet, Pressable} from 'react-native'
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
-const Task = ({name, image, code}) => {
+const Task = (props) => {
     return(
         <View style={styles.item} >
-            <Text>Laitteen Nimi: {name}</Text>
-            <Text>Laitteen Kuva: {image}</Text>
-            <Text>Laitteen Koodi: {code}</Text>
+            <Text>Laitteen Nimi: {props.name}</Text>
+            <Text>Laitteen Kuva: {props.image}</Text>
+            <Text>Laitteen Koodi: {props.code}</Text>
         </View>
     )
     

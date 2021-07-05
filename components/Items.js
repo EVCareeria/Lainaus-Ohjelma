@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {View, Text, StyleSheet, Platform, KeyboardAvoidingView,TextInput, Pressable, ScrollView, Alert, Image } from 'react-native'
 import Task from './Task'
+import Scanner from './Scanner'
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 import uuid from 'react-native-uuid';
 
@@ -8,6 +9,7 @@ const Items = () => {
     const [itemName, setItemName] = useState({name: String, image: String, code: String, id: Number})
     const [list, setList ] = useState([])
     const [toggle, setToggle] = useState(false)
+    const [scanner, setScanner]= useState(false)
     let iD = uuid.v1()
 
 
@@ -15,7 +17,8 @@ const Items = () => {
          setItemName({...itemName, id: iD})
          console.log(itemName)
          {itemName && iD != null ? setList([...list, itemName]) : Alert.alert("You cant add empty object")}
-         setItemName(null)
+         Alert.alert("Laite Lisätty ")
+         setItemName('')
         console.log(list)
     }
 
@@ -40,8 +43,10 @@ const Items = () => {
                 </View>
                 <View  style={styles.Add}>
                     <Text>Lisää laitteen viivakoodi</Text>
-                        <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} />
-                        
+                        {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
+                        <View style={{flex:4}}>
+                            <Scanner />
+                        </View>
                 </View>
                 <Pressable onPress={() => AddItem()} style={{justifyContent:'center', alignSelf:'center', borderRadius:2, borderWidth:1, width: vw(30), height: vh(4), alignItems:'center', backgroundColor:'white', margin: 10}}>
                                 <Text>
@@ -59,7 +64,7 @@ const Items = () => {
                     <View style={{justifyContent:'center', alignItems:'center'}} >
                             {list.map((item) =>{
                             return  <View style={styles.items} key={item.id}>
-                                        <Task item={item} />
+                                        <Task name={item.name} image={item.image} code={item.code} />
                                     </View>
                             })}
                     </View>
