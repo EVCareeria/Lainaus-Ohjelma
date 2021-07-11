@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Button,Pressable } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import {DataContext} from './ItemContext'
 
-export default function Scanner() {
+
+export default function ModalScanner(props) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const [item, setItem] = useState({codeType: '', codeData: ''})
+  const [dataItem, setDataItem] = useState({codeType: '', codeData: ''})
+
+  function closeModal() {
+    props.closeModal(true)
+    console.log("Painoit nappia")
+  }
 
   useEffect(() => {
     (async () => {
@@ -17,7 +24,7 @@ export default function Scanner() {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    setItem({...item, codeType: type, codeData: data})
+    setDataItem({...dataItem, codeType: type, codeData: data})
     console.log(item)
   };
 
@@ -30,9 +37,12 @@ export default function Scanner() {
 
   return (
     <View style={{justifyContent: 'center', flex: 6}}>
+      <Pressable onPress={() => closeModal()} style={{flex:1, alignContent:'center', backgroundColor:'white', zIndex:0}}>
+        <Text style={{alignSelf:'center', justifyContent:'center', fontSize:30, borderWidth:2, borderRadius:15, padding:15,backgroundColor:'yellow'}}>Sulje Modal Ikkuna</Text>
+      </Pressable>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
+        style={{flex:5, justifyContent:'center'}}
       />
       {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
     </View>

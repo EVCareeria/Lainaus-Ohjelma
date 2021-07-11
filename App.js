@@ -1,15 +1,19 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import Items from './components/Items'
+import Item from './components/Item'
 import Scanner from './components/Scanner';
+import { DataContext } from './components/ItemContext';
 import { createBottomTabNavigator  } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 
 
-
+export function CodeContenxt({}) {
+}
 
 export default function App() {
-  const Tab = createBottomTabNavigator ();
+  
+  const Tab = createBottomTabNavigator();
+
 
   return (
       <NavigationContainer>
@@ -21,8 +25,11 @@ export default function App() {
         labelStyle: {fontSize: 24}
         }}
         >
-          <Tab.Screen name="Laitteet" component={Items} />
-          <Tab.Screen name="Skanneri" component={Scanner} />
+          
+            <Tab.Screen name="Item" component={Item} />
+            <Tab.Screen name="Skanneri" component={Scanner} />
+          
+          
         </Tab.Navigator>
       </NavigationContainer>
   );

@@ -4,13 +4,15 @@ import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
 const Task = (props) => {
     return(
-        <View style={styles.item} >
+        <View style={styles.item}>
             <Text>Laitteen Nimi: {props.name}</Text>
-            <Text>Laitteen Kuva: {props.image}</Text>
-            <Text>Laitteen Koodi: {props.code}</Text>
+            <View style={{flex:1}}>
+                <Text>Laitteen Kuva: {props.image}</Text>
+                <Text>Laitteen Koodi: {props.codetype}</Text>
+                <Text>Laitteen Koodi: {props.codedata}</Text>
+            </View>
         </View>
-    )
-    
+    )  
 }
 
 const styles = StyleSheet.create({
