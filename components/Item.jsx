@@ -7,7 +7,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 
 const Items = () => {
     const [itemInfo, setItemInfo] = useState([])
-    const [item, setItem] = useState()
+    const [item, setItem] = useState({})
     const [name, setName] = useState('') 
     const [codeType, setCodeType] = useState(0)
     const [codeData, setCodeData] = useState(0)
@@ -16,6 +16,7 @@ const Items = () => {
     const [newId, setNewId] = useState(0)
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
+    const [update, setUpdate] = useState(false)
   
     useEffect(() => {
       (async () => {
@@ -23,6 +24,24 @@ const Items = () => {
         setHasPermission(status === 'granted');
       })();
     }, []);
+
+    useEffect(()=>{
+        if(name && codeType && codeData != null) {
+            setNewId(newId +1)
+            setItem({itemid: newId, itemname: name, codetype: codeType, codedata: codeData})
+            setItemInfo([...itemInfo, item])
+            Alert.alert('Item added to the list')
+            setName(null)
+            setCodeType(null)
+            setCodeData(null)
+        }else {
+            setName(null)
+            setCodeType(null)
+            setCodeData(null)
+            Alert.alert('Item was not added to the list')
+        }
+        
+    }, [update])
 
   
     const handleBarCodeScanned = ({ type, data }) => {
@@ -42,20 +61,10 @@ const Items = () => {
     }
     
 
-     const AddItem = () => {
-         setItem(null)
-         setNewId(newId +1)
-         setItem({itemid: newId, itemname: name, codetype: codeType, codedata: codeData})
-         setItemInfo([...itemInfo, item])
-         Alert.alert('Item added to the list')
-    }
-
-
-
 
     return(
-        <View style={{flex: 1, backgroundColor: "#b5800d"}}>
-            <View style={{flex:1, justifyContent:'center', alignItems:'center', marginTop:50, borderWidth:1, width: '100%', height:'5%'}}>
+        <View style={{flex: 12, backgroundColor: "#b5800d"}}>
+            <View style={{justifyContent:'center', alignItems:'center', marginTop:50, borderWidth:1, width: '100%', height:'25%'}}>
                 <Pressable onPress={() => setToggle(!toggle)}>
                     <Text style={{fontSize:25, textAlign:'center', backgroundColor: 'cyan'}}>
                         Lisää uusi laite
@@ -92,26 +101,26 @@ const Items = () => {
                              ) : null}
                 </Pressable>
                 
-                <Pressable onPress={() => AddItem()} style={{justifyContent:'center', alignSelf:'center', borderRadius:20, borderWidth:1, width: '40%', height: '8%', alignItems:'center', backgroundColor:'white', margin: 10}}>
+                <Pressable onPress={() => setUpdate(!update)} style={{justifyContent:'center', alignSelf:'center', borderRadius:20, borderWidth:1, width: '40%', height: '8%', alignItems:'center', backgroundColor:'white', margin: 10}}>
                                 <Text style={{fontSize:20}}>
                                     Lisää tuote
                                 </Text>
                         </Pressable>
             </View>
                 :
-                <ScrollView style={{flex: 4}} fadingEdgeLength={200}>
+                <ScrollView style={{flex: 4}} fadingEdgeLength={200} style={{flex:4}}>
                     <KeyboardAvoidingView
                     behavior={Platform.OS == 'ios' ? "padding" : "height"}
                     >
                         {/* LISTATUT ITEMIT */}
                     </KeyboardAvoidingView>
-                        {itemInfo.map((item) => (
-                            <View key={item.itemid}>
-                                <View>
-                                    <Text>Name: {item.itemname}</Text>
-                                    <Text>ID: {item.itemid}</Text>
-                                    <Text>Codedata: {item.codedata}</Text>
-                                    <Text>Codetype: {item.codetype}</Text>
+                        {itemInfo.map((i) => (
+                            <View key={i.itemid} style={{flex:2, justifyContent:'center', borderWidth:1, borderRadius:15, padding:25, margin:15}}>
+                                <View key={i.itemid}>
+                                    <Text>Name: {i.itemname}</Text>
+                                    <Text>ID: {i.itemid}</Text>
+                                    <Text>Codedata: {i.codedata}</Text>
+                                    <Text>Codetype: {i.codetype}</Text>
                                 </View>
                             </View>
                         ))}
