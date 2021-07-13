@@ -2,7 +2,6 @@ import React, {useContext, useState} from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import Item from './components/Item'
 import Scanner from './components/Scanner';
-import { DataContext } from './components/ItemContext';
 import { createBottomTabNavigator  } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 

@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import {View, Text, StyleSheet, Platform, KeyboardAvoidingView,TextInput, Pressable, ScrollView, Alert,Modal, Button,FlatList, Image } from 'react-native'
-import { DataContext } from './ItemContext'
+import {View, Text, StyleSheet, Platform, KeyboardAvoidingView,TextInput, Pressable, ScrollView, Alert,Modal, Button,FlatList, Image, TouchableOpacity } from 'react-native'
 import ModalScanner from './ModalScanner'
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import * as ImagePicker from 'expo-image-picker';
+import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+import Animated, { EasingNode } from 'react-native-reanimated';
 
 
 const Items = () => {
@@ -17,7 +19,9 @@ const Items = () => {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [update, setUpdate] = useState(false)
-  
+    const [imagePicker, setImagePicker] = useState(false)
+    const [image, setImage] = useState(null);
+
     useEffect(() => {
       (async () => {
         const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -28,7 +32,7 @@ const Items = () => {
     useEffect(()=>{
         if(name && codeType && codeData != null) {
             setNewId(newId +1)
-            setItem({itemid: newId, itemname: name, codetype: codeType, codedata: codeData})
+            setItem({itemid: newId, itemname: name, codetype: codeType, codedata: codeData, image: image })
             setItemInfo([...itemInfo, item])
             Alert.alert('Item added to the list')
             setName(null)
@@ -42,6 +46,17 @@ const Items = () => {
         }
         
     }, [update])
+
+    useEffect(() => {
+        (async () => {
+          if (Platform.OS !== 'web') {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+              alert('Sorry, we need camera roll permissions to make this work!');
+            }
+          }
+        })();
+      }, []);
 
   
     const handleBarCodeScanned = ({ type, data }) => {
@@ -59,14 +74,32 @@ const Items = () => {
     if (hasPermission === false) {
       return <Text>No access to camera</Text>;
     }
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        console.log(result);
+        const {uri} = result
+        setImage(uri)
+        
+    
+        if (!result.cancelled) {
+            setImage(result.uri);
+        }
+        setTimeout(function(){setImagePicker(false)}, 3000)
+      };
     
 
 
     return(
         <View style={{flex: 12, backgroundColor: "#b5800d"}}>
-            <View style={{justifyContent:'center', alignItems:'center', marginTop:50, borderWidth:1, width: '100%', height:'25%'}}>
+            <View style={{justifyContent:'center', alignItems:'center', marginTop:50, borderWidth:1, width: '100%', height:'15%'}}>
                 <Pressable onPress={() => setToggle(!toggle)}>
-                    <Text style={{fontSize:25, textAlign:'center', backgroundColor: 'cyan'}}>
+                    <Text style={{fontSize:35, textAlign:'center', borderWidth:3, borderRadius:15, padding:10}}>
                         Lisää uusi laite
                     </Text>
                 </Pressable>
@@ -100,6 +133,23 @@ const Items = () => {
                                  </Modal>
                              ) : null}
                 </Pressable>
+                <Pressable onPress={() => setImagePicker(!imagePicker)} style={{height: '15%', width: '85%', backgroundColor:'white', borderWidth: 3, borderRadius: 20,justifyContent:'center', alignContent:'center'}}>
+                        <Text style={{textAlign:'center', backgroundColor: 'white', height: 40, fontSize: 18}}>Lisää laitteen kuva</Text>
+                            {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
+                            {imagePicker ? (
+                                 <Modal
+                                 style={{flex:1}}
+                                 animationType="slide"
+                                 transparent={true}
+                                 visible={true}
+                                 >
+                                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                                        <Button title="Pick an image from camera roll" onPress={pickImage} />
+                                        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+                                    </View>
+                                 </Modal>
+                             ) : null}
+                </Pressable>
                 
                 <Pressable onPress={() => setUpdate(!update)} style={{justifyContent:'center', alignSelf:'center', borderRadius:20, borderWidth:1, width: '40%', height: '8%', alignItems:'center', backgroundColor:'white', margin: 10}}>
                                 <Text style={{fontSize:20}}>
@@ -115,12 +165,16 @@ const Items = () => {
                         {/* LISTATUT ITEMIT */}
                     </KeyboardAvoidingView>
                         {itemInfo.map((i) => (
-                            <View key={i.itemid} style={{flex:2, justifyContent:'center', borderWidth:1, borderRadius:15, padding:25, margin:15}}>
+                            <View key={i.itemid} style={{flex:2, justifyContent:'center', borderWidth:1, borderRadius:15, padding:25, margin:15, backgroundColor:'white'}}>
                                 <View key={i.itemid}>
-                                    <Text>Name: {i.itemname}</Text>
+                                    <Text style={{fontSize:30, fontStyle:'italic'}}>Name: {i.itemname}</Text>
                                     <Text>ID: {i.itemid}</Text>
                                     <Text>Codedata: {i.codedata}</Text>
                                     <Text>Codetype: {i.codetype}</Text>
+                                    <View style={{paddingLeft: '30%', flexBasis:200}}>
+                                        <Image source={{ uri: i.image }} style={{ width: vw(50), height: vh(25) }} />
+                                    </View>
+                                    
                                 </View>
                             </View>
                         ))}

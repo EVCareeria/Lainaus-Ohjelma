@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Button,Pressable } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import {DataContext} from './ItemContext'
 
 
 export default function ModalScanner(props) {
