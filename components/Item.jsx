@@ -5,14 +5,42 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 import Animated, { EasingNode } from 'react-native-reanimated';
+import {favi} from '../assets/favicon.png'
+import Task from './Task'
+import {database} from '../components/database'
 
-
+  const initialData = [
+    { 
+      itemid: 0,
+     itemname: 'testi1',
+     codetype: 32,
+     codedata: 20303038547,
+     image: favi 
+    },
+    { 
+      itemid: 1,
+     itemname: 'testi2',
+     codetype: 32,
+     codedata: 2222333334,
+     image: favi 
+    },
+    { 
+      itemid: 2,
+     itemname: 'testi3',
+     codetype: 16,
+     codedata: 49494940,
+     image: favi 
+    },
+  ]
+  
+  
 const Items = () => {
-    const [itemInfo, setItemInfo] = useState([])
+  const [dataBase, setDataBase] = useState([])
+    const [itemInfo, setItemInfo] = useState(initialData)
     const [item, setItem] = useState({})
-    const [name, setName] = useState('') 
-    const [codeType, setCodeType] = useState(0)
-    const [codeData, setCodeData] = useState(0)
+    const [name, setName] = useState(null) 
+    const [codeType, setCodeType] = useState(null)
+    const [codeData, setCodeData] = useState(null)
     const [toggle, setToggle] = useState(false)
     const [scanner, setScanner]= useState(false)
     const [newId, setNewId] = useState(0)
@@ -34,18 +62,27 @@ const Items = () => {
             setNewId(newId +1)
             setItem({itemid: newId, itemname: name, codetype: codeType, codedata: codeData, image: image })
             setItemInfo([...itemInfo, item])
+            database.insertItem(newId, name, codeType, codeData, image, refreshItem)
             Alert.alert('Item added to the list')
             setName(null)
             setCodeType(null)
             setCodeData(null)
+            
+            
+            
         }else {
             setName(null)
             setCodeType(null)
             setCodeData(null)
+            setImage(null)
             Alert.alert('Item was not added to the list')
         }
-        
     }, [update])
+    
+    const refreshItem = () =>  {
+      console.log(dataBase)
+      return database.getItems(setDataBase)
+    }
 
     useEffect(() => {
         (async () => {
@@ -58,6 +95,11 @@ const Items = () => {
         })();
       }, []);
 
+          const deleteItem = id => {
+            const newList = itemInfo.filter(i => i.itemid !== id);
+            setItemInfo(newList)
+          }
+
   
     const handleBarCodeScanned = ({ type, data }) => {
       setScanned(true);
@@ -65,7 +107,6 @@ const Items = () => {
       setCodeType(type)
       setCodeData(data)
       setScanner(!scanner)
-      console.log(item)
     };
   
     if (hasPermission === null) {
@@ -82,10 +123,8 @@ const Items = () => {
           quality: 1,
         });
     
-        console.log(result);
         const {uri} = result
-        setImage(uri)
-        
+        setImage(uri)  
     
         if (!result.cancelled) {
             setImage(result.uri);
@@ -165,18 +204,9 @@ const Items = () => {
                         {/* LISTATUT ITEMIT */}
                     </KeyboardAvoidingView>
                         {itemInfo.map((i) => (
-                            <View key={i.itemid} style={{flex:2, justifyContent:'center', borderWidth:1, borderRadius:15, padding:25, margin:15, backgroundColor:'white'}}>
-                                <View key={i.itemid}>
-                                    <Text style={{fontSize:30, fontStyle:'italic'}}>Name: {i.itemname}</Text>
-                                    <Text>ID: {i.itemid}</Text>
-                                    <Text>Codedata: {i.codedata}</Text>
-                                    <Text>Codetype: {i.codetype}</Text>
-                                    <View style={{paddingLeft: '30%', flexBasis:200}}>
-                                        <Image source={{ uri: i.image }} style={{ width: vw(50), height: vh(25) }} />
-                                    </View>
-                                    
-                                </View>
-                            </View>
+                            <Task 
+                            ID={i.itemid} name={i.itemname} codetype={i.codetype} codedata={i.codedata} image={i.image} deleteitem={() => deleteItem(i.itemid)}
+                            />
                         ))}
                 </ScrollView>
                 }
