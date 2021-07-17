@@ -1,4 +1,4 @@
-import React from 'react'
+/* import React from 'react'
 
 import * as SQLite from "expo-sqlite"
 
@@ -46,7 +46,7 @@ const setupDatabaseAsync = async () => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
         tx.executeSql(
-          'create table if not exists items (id integer primary key not null, name text, codetype text, codedata int, image text, status int, date text );'
+          'create table if not exists items (id integer primary key not null, name text, codetype text, codedata int, image text);'
         );
       },
       (_, error) => { console.log("db error creating tables"); console.log(error); reject(error) },
@@ -72,4 +72,4 @@ export const database = {
   setupDatabaseAsync,
   setupItemAsync,
   dropDatabaseTablesAsync,
-}
+} */

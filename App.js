@@ -5,18 +5,19 @@ import Scanner from './components/Scanner';
 import { createBottomTabNavigator  } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
-import useDatabase from './hooks/useDatabase'
-import LoopDatabase from './components/LoopDatabase'
+//import useDatabase from './hooks/useDatabase'
+import HomeScreen from './components/Homescreen';
+import ViewItems from './components/ViewItems';
 	
 
 export default function App() {
-  SplashScreen.preventAutoHideAsync(); //don't let the splash screen hide
+  //SplashScreen.preventAutoHideAsync(); //don't let the splash screen hide
 
 
-  const isDBLoadingComplete = useDatabase();
+  //const isDBLoadingComplete = useDatabase();
 
-  if (isDBLoadingComplete) {
-    SplashScreen.hideAsync();
+  /* if (isDBLoadingComplete) {
+    SplashScreen.hideAsync(); */
   const Tab = createBottomTabNavigator();
 
 
@@ -30,16 +31,14 @@ export default function App() {
         labelStyle: {fontSize: 24}
         }}
         >
+            <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen name="Item" component={Item} />
+            <Tab.Screen name="View Items" component={ViewItems} />
             <Tab.Screen name="Skanneri" component={Scanner} />
-            <Tab.Screen name="Database" component={LoopDatabase} />
           
         </Tab.Navigator>
       </NavigationContainer>
   );
-} else {
-  return null;
-}
 }
 
 const styles = StyleSheet.create({

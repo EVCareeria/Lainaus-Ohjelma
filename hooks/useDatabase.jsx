@@ -1,4 +1,4 @@
-// force the state to clear with fast refresh in Expo
+/* // force the state to clear with fast refresh in Expo
 // @refresh reset
 import React, {useEffect} from 'react';
 
@@ -24,4 +24,4 @@ export default function useDatabase() {
   }, []);
 
   return isDBLoadingComplete;
-}
+} */

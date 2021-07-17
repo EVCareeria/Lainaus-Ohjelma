@@ -7,7 +7,9 @@ import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 import Animated, { EasingNode } from 'react-native-reanimated';
 import {favi} from '../assets/favicon.png'
 import Task from './Task'
-import {database} from '../components/database'
+import { DatabaseConnection } from './database/Database';
+
+const db = DatabaseConnection.getConnection();
 
   const initialData = [
     { 
@@ -34,10 +36,10 @@ import {database} from '../components/database'
   ]
   
   
-const Items = () => {
-  const [dataBase, setDataBase] = useState([])
-    const [itemInfo, setItemInfo] = useState(initialData)
-    const [item, setItem] = useState({})
+const Items = ({navigation}) => {
+  //const [dataBase, setDataBase] = useState([])
+   const [itemInfo, setItemInfo] = useState(initialData)
+    //const [item, setItem] = useState({})
     const [name, setName] = useState(null) 
     const [codeType, setCodeType] = useState(null)
     const [codeData, setCodeData] = useState(null)
@@ -58,15 +60,16 @@ const Items = () => {
     }, []);
 
     useEffect(()=>{
-        if(name && codeType && codeData != null) {
-            setNewId(newId +1)
-            setItem({itemid: newId, itemname: name, codetype: codeType, codedata: codeData, image: image })
-            setItemInfo([...itemInfo, item])
-            database.insertItem(newId, name, codeType, codeData, image, refreshItem)
+        if(name && codeType && codeData && image != null) {
+            addToDB()
+         //   setNewId(newId +1)
+          //  setItem({itemid: newId, itemname: name, codetype: codeType, codedata: codeData, image: image })
+           // setItemInfo([...itemInfo, item])
             Alert.alert('Item added to the list')
             setName(null)
             setCodeType(null)
             setCodeData(null)
+            setImage(null)
             
             
             
@@ -94,6 +97,25 @@ const Items = () => {
           }
         })();
       }, []);
+
+      function addToDB() {
+        db.transaction(function (tx) {
+          tx.executeSql(
+            'INSERT INTO items (item_name, codetype, codedata, image) VALUES (?,?,?,?)',
+            [name, codeType, codeData, image],
+            (tx, results) => {
+              console.log('Results', results.rowsAffected);
+              if (results.rowsAffected > 0) {
+                Alert.alert(
+                  'success',
+                  'item added to database',
+                );
+              } else alert('Error while adding item to database');
+            }
+          );
+        });
+      }
+      
 
           const deleteItem = id => {
             const newList = itemInfo.filter(i => i.itemid !== id);
