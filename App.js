@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 //import useDatabase from './hooks/useDatabase'
 import HomeScreen from './components/Homescreen';
-import ViewItems from './components/ViewItems';
+import ViewItems from './components/Pages/ViewItems';
 	
 
 export default function App() {

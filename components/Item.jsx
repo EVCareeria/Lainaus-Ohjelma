@@ -1,10 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {View, Text, StyleSheet, Platform, KeyboardAvoidingView,TextInput, Pressable, ScrollView, Alert,Modal, Button,FlatList, Image, TouchableOpacity } from 'react-native'
-import ModalScanner from './ModalScanner'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
-import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
-import Animated, { EasingNode } from 'react-native-reanimated';
 import {favi} from '../assets/favicon.png'
 import Task from './Task'
 import { DatabaseConnection } from './database/Database';
@@ -36,7 +33,7 @@ const db = DatabaseConnection.getConnection();
   ]
   
   
-const Items = ({navigation}) => {
+const Items = () => {
   //const [dataBase, setDataBase] = useState([])
    const [itemInfo, setItemInfo] = useState(initialData)
     //const [item, setItem] = useState({})
@@ -189,7 +186,7 @@ const Items = ({navigation}) => {
                                             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                                             style={{flex:5, justifyContent:'center'}}
                                         />
-                                    {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+                                    {scanned && <Button style={{flex: 1}} title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
                                     </View>
                                  </Modal>
                              ) : null}
@@ -205,7 +202,7 @@ const Items = ({navigation}) => {
                                  visible={true}
                                  >
                                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                                        <Button title="Pick an image from camera roll" onPress={pickImage} />
+                                        <Button style={{flex:1}} title="Pick an image from camera roll" onPress={pickImage} />
                                         {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
                                     </View>
                                  </Modal>
@@ -219,7 +216,7 @@ const Items = ({navigation}) => {
                         </Pressable>
             </View>
                 :
-                <ScrollView style={{flex: 4}} fadingEdgeLength={200} style={{flex:4}}>
+                <ScrollView style={{flex: 4}} fadingEdgeLength={150} style={{flex:4}}>
                     <KeyboardAvoidingView
                     behavior={Platform.OS == 'ios' ? "padding" : "height"}
                     >
