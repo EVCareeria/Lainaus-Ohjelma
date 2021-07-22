@@ -5,7 +5,10 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 export default function Scanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const [item, setItem] = useState({codeType: '', codeData: ''})
+  const [codeType, setCodeType] = useState(null)
+  const [codeData, setCodeData] = useState(null)
+  const [scanner, setScanner]= useState(false)
+  const [scannerItem, setScannerItem] = useState()
 
   useEffect(() => {
     (async () => {
@@ -14,11 +17,29 @@ export default function Scanner() {
     })();
   }, []);
 
+  useEffect(() => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT * FROM items WHERE codetype=?, codedata=?',
+        [codeType, codeData],
+        (tx, results) => {
+          var temp = [];
+          for (let i = 0; i < results.rows.length; ++i)
+            temp.push(results.rows.item(i));
+            setScannerItem(temp);
+          Alert.alert('Search completed')
+          console.log(temp)
+        }
+      );
+    });
+  }, [scanner]);
+
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    setItem({...item, codeType: type, codeData: data})
-    console.log(item)
+    setCodeType(type)
+    setCodeData(data)
+    setScanner(!scanner)
   };
 
   if (hasPermission === null) {

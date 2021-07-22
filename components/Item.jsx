@@ -243,7 +243,7 @@ Add: {
 justifyContent: 'center',
 alignItems: 'center',
 flexDirection: 'column',
-height: '15%',
+height: '13%',
 backgroundColor: '#f5f5f5',
 borderWidth: 3,
 marginTop: 10,
