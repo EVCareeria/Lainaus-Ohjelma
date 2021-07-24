@@ -8,7 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 const db = DatabaseConnection.getConnection();
 
-const ViewItems = ({navigation}) => {
+const ViewItemSearch = ({codetype, codedata, goback}) => {
   const [flatListItems, setFlatListItems] = useState([]);
   const [update, setUpdate] = useState()
   const [modalDelete, setModalDelete] = useState()
@@ -16,19 +16,19 @@ const ViewItems = ({navigation}) => {
   useEffect(() => {
     db.transaction((tx) => {
       tx.executeSql(
-        'SELECT * FROM items',
-        [],
+        'SELECT * FROM items WHERE codetype=?, codedata=?',
+        [codetype, codedata],
         (tx, results) => {
           var temp = [];
           for (let i = 0; i < results.rows.length; ++i)
             temp.push(results.rows.item(i));
-          setFlatListItems(temp);
-          Alert.alert('List updated')
+            setFlatListItems(temp);
+          Alert.alert('Search completed')
           console.log(temp)
         }
       );
     });
-  }, [update, modalDelete]);
+  }, [scanner]);
 
   function updateFunction() {
     setUpdate(!update)
@@ -42,14 +42,8 @@ const ViewItems = ({navigation}) => {
       <Pressable onPress={() => setUpdate(!update)} style={{flex:1, justifyContent:'center', borderWidth:3, borderRadius:15, margin:15, borderColor:'blue', marginTop:50}}>
             <Text style={{textAlign:'center', fontSize:30}}>Update current list</Text>
         </Pressable>
-      <View style={{flex:11}}>
-        <ScrollView fadingEdgeLength={150}>
-            {flatListItems.map((i) => (
-              <Pressable style={{flex:1, margin: 10}} key={i.item_id}>
-                <ViewItem itemID={i.item_id} itemName={i.item_name} codetype={i.codetype} codedata={i.codedata} image={i.image} setUpdateModal={updateFunction} setDeleteModal={deleteFunction} />
-              </Pressable>
-            ))}
-        </ScrollView>
+      <View>
+            
       </View>
     </SafeAreaView>
   )
@@ -72,4 +66,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ViewItems;
+export default ViewItemSearch;

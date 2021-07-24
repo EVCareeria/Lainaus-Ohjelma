@@ -6,7 +6,7 @@ import { createBottomTabNavigator  } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 //import useDatabase from './hooks/useDatabase'
-import HomeScreen from './components/Homescreen';
+import HomeScreen, { ScannerStack } from './components/Homescreen';
 import ViewItems from './components/Pages/ViewItems';
 	
 
@@ -31,10 +31,9 @@ export default function App() {
         labelStyle: {fontSize: 24}
         }}
         >
-            <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="Home" component={ScannerStack} />
             <Tab.Screen name="Item" component={Item} />
             <Tab.Screen name="View Items" component={ViewItems} />
-            <Tab.Screen name="Skanneri" component={Scanner} />
           
         </Tab.Navigator>
       </NavigationContainer>

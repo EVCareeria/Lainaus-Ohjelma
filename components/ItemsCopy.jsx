@@ -36,12 +36,16 @@ const db = DatabaseConnection.getConnection();
 const Items = ({navigation}) => {
   //const [dataBase, setDataBase] = useState([])
    const [itemInfo, setItemInfo] = useState(initialData)
+    //const [item, setItem] = useState({})
     const [name, setName] = useState(null) 
     const [codeType, setCodeType] = useState(null)
     const [codeData, setCodeData] = useState(null)
+    const [toggle, setToggle] = useState(false)
     const [scanner, setScanner]= useState(false)
+    const [newId, setNewId] = useState(0)
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
+    const [update, setUpdate] = useState(false)
     const [imagePicker, setImagePicker] = useState(false)
     const [image, setImage] = useState(null);
 
@@ -148,14 +152,22 @@ const Items = ({navigation}) => {
 
 
     return(
-      <View style={{flex: 12, backgroundColor: "#b5800d", justifyContent:'space-evenly', alignItems:'center'}}>
-
+        <View style={{flex: 12, backgroundColor: "#b5800d"}}>
+            <View style={{justifyContent:'center', alignItems:'center', marginTop:50, borderWidth:1, width: '100%', height:'15%'}}>
+                <Pressable onPress={() => setToggle(!toggle)}>
+                    <Text style={{fontSize:35, textAlign:'center', borderWidth:3, borderRadius:15, padding:10}}>
+                        Lisää uusi laite
+                    </Text>
+                </Pressable>
+            </View>
+            
+            {toggle === true ? <View style={{flex:2, justifyContent: 'space-evenly', alignItems:'center' }}>
                 <View  style={styles.Add}>
-                    <Text style={{fontSize: 20}}>Lisää laitteen nimi</Text>
+                    <Text style={{fontSize: 18}}>Lisää laitteen nimi</Text>
                         <TextInput value={name} onChangeText={name => setName(name)} />
                 </View>
-                <Pressable onPress={() => setScanner(!scanner)} style={{height: '10%', width: '85%', backgroundColor:'white', borderWidth: 3, borderRadius: 20,justifyContent:'center', alignContent:'center',margin:'5%'}}>
-                        <Text style={{textAlign:'center', backgroundColor: 'white', height: 40, fontSize: 20}}>Lisää laitteen viivakoodi</Text>
+                <Pressable onPress={() => setScanner(!scanner)} style={{height: '15%', width: '85%', backgroundColor:'white', borderWidth: 3, borderRadius: 20,justifyContent:'center', alignContent:'center'}}>
+                        <Text style={{textAlign:'center', backgroundColor: 'white', height: 40, fontSize: 18}}>Lisää laitteen viivakoodi</Text>
                             {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
                             {scanner ? (
                                  <Modal
@@ -177,8 +189,8 @@ const Items = ({navigation}) => {
                                  </Modal>
                              ) : null}
                 </Pressable>
-                <Pressable onPress={() => setImagePicker(!imagePicker)} style={{height: '10%', width: '85%', backgroundColor:'white', borderWidth: 3, borderRadius: 20,justifyContent:'center', alignContent:'center',margin:'5%'}}>
-                        <Text style={{textAlign:'center', backgroundColor: 'white', height: 40, fontSize: 20}}>Lisää laitteen kuva</Text>
+                <Pressable onPress={() => setImagePicker(!imagePicker)} style={{height: '15%', width: '85%', backgroundColor:'white', borderWidth: 3, borderRadius: 20,justifyContent:'center', alignContent:'center'}}>
+                        <Text style={{textAlign:'center', backgroundColor: 'white', height: 40, fontSize: 18}}>Lisää laitteen kuva</Text>
                             {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
                             {imagePicker ? (
                                  <Modal
@@ -201,11 +213,25 @@ const Items = ({navigation}) => {
                                 </Text>
                         </Pressable>
             </View>
-    )
-        
+                :
+                <ScrollView style={{flex: 4}} fadingEdgeLength={150} style={{flex:4}}>
+                    <KeyboardAvoidingView
+                    behavior={Platform.OS == 'ios' ? "padding" : "height"}
+                    >
+                        {/* LISTATUT ITEMIT */}
+                    </KeyboardAvoidingView>
+                        {itemInfo.map((i) => (
+                            <Task 
+                            ID={i.itemid} name={i.itemname} codetype={i.codetype} codedata={i.codedata} image={i.image} deleteitem={() => deleteItem(i.itemid)}
+                            />
+                        ))}
+                </ScrollView>
+                }
+                {/* ITEMEIDEN LISÄYS */}
                
-          
-    
+            
+        </View>
+    ) 
 }
 
 
@@ -215,10 +241,10 @@ Add: {
 justifyContent: 'center',
 alignItems: 'center',
 flexDirection: 'column',
-height: '10%',
+height: '13%',
 backgroundColor: '#f5f5f5',
 borderWidth: 3,
-marginTop: '5%',
+marginTop: 10,
 width: '85%',
 borderRadius: 20
 },
