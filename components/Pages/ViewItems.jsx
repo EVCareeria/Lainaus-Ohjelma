@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, Text, View, SafeAreaView, StyleSheet, Image, Pressable, Modal } from 'react-native';
+import { FlatList, Text, View, SafeAreaView, StyleSheet, Pressable } from 'react-native';
 import { DatabaseConnection } from '../database/Database';
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 import { Alert } from 'react-native';

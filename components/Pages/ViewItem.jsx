@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
-import {View, Text, Pressable, SafeAreaView, Modal, Image} from 'react-native'
-import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+import {View, Text, SafeAreaView, Modal, Image} from 'react-native'
+import { vw, vh } from 'react-native-expo-viewport-units';
 import { StyleSheet } from 'react-native';
 import { Entypo } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons'; 
@@ -40,9 +40,9 @@ const ViewItem = (props) => {
                   </View>
                   <Text style={styles.textbottom}>{itemName}</Text>
                   <Text style={styles.textheader}>Codetype</Text>
-                  <Text style={styles.textbottom}>{codedata}</Text>
-                  <Text style={styles.textheader}>Codedata</Text>
                   <Text style={styles.textbottom}>{codetype}</Text>
+                  <Text style={styles.textheader}>Codedata</Text>
+                  <Text style={styles.textbottom}>{codedata}</Text>
                   <Text style={styles.textheader}>Image</Text>
                   <Image source={{ uri: image }} style={styles.ImageStyle} />
                 </View>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Alert, SafeAreaView, Image, Text, Pressable } from 'react-native';
 import { DatabaseConnection } from '../database/Database';
-import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+import { vw, vh } from 'react-native-expo-viewport-units';
 
 const db = DatabaseConnection.getConnection();
 

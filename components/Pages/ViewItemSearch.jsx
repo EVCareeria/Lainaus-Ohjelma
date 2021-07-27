@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, Text, View, SafeAreaView, StyleSheet, Image, Pressable, Modal } from 'react-native';
+import { View, SafeAreaView, StyleSheet, Pressable, } from 'react-native';
 import { DatabaseConnection } from '../database/Database';
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 import { Alert } from 'react-native';
@@ -8,16 +8,19 @@ import { ScrollView } from 'react-native-gesture-handler';
 
 const db = DatabaseConnection.getConnection();
 
-const ViewItemSearch = ({codetype, codedata, goback}) => {
+const ViewItemSearch = (props) => {
   const [flatListItems, setFlatListItems] = useState([]);
-  const [update, setUpdate] = useState()
+  const [update, setUpdate] = useState(false)
   const [modalDelete, setModalDelete] = useState()
+
+  const {codetype, codedata} = props
+  console.log('ScannerFetchLog' + flatListItems)
 
   useEffect(() => {
     db.transaction((tx) => {
       tx.executeSql(
-        'SELECT * FROM items WHERE codetype=?, codedata=?',
-        [codetype, codedata],
+        'SELECT * FROM items WHERE codedata=?',
+        [codedata],
         (tx, results) => {
           var temp = [];
           for (let i = 0; i < results.rows.length; ++i)
@@ -28,7 +31,7 @@ const ViewItemSearch = ({codetype, codedata, goback}) => {
         }
       );
     });
-  }, [scanner]);
+  }, []);
 
   function updateFunction() {
     setUpdate(!update)
@@ -40,7 +43,13 @@ const ViewItemSearch = ({codetype, codedata, goback}) => {
   return(
     <SafeAreaView style={{flex:12}}>
       <Pressable onPress={() => setUpdate(!update)} style={{flex:1, justifyContent:'center', borderWidth:3, borderRadius:15, margin:15, borderColor:'blue', marginTop:50}}>
-            <Text style={{textAlign:'center', fontSize:30}}>Update current list</Text>
+            {flatListItems.map(i => {
+              return(
+                <View>
+                  {i.item_id}
+                </View>
+              )
+            })}
         </Pressable>
       <View>
             

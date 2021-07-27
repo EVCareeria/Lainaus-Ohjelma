@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
-import { View, SafeAreaView, Pressable, Text } from 'react-native';
+import { View, Pressable, Text } from 'react-native';
 import { DatabaseConnection } from './database/Database';
 import { createStackNavigator } from '@react-navigation/stack';
 import Scanner from './Scanner';
-import Item from './Item'
-import ViewItemSearch from './Pages/ViewItemSearch';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +17,7 @@ export function ScannerStack() {
   );
 }
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     db.transaction(function (txn) {
       txn.executeSql(
@@ -41,23 +39,23 @@ const HomeScreen = ({navigation}) => {
   }, []);
 
   return (
-    <View style={{flex:12, justifyContent:'center', alignSelf:'center'}}>
-        <Text style={{textAlign:'center', justifyContent:'center', fontSize:30, padding:'10%'}}>Jotain sisältöä</Text>
-        <View style={{flex:1, justifyContent:'center', margin:30, padding:'15%'}}>
-          <Pressable style={{ flex:1, justifyContent:'center'}} onPress={() => navigation.navigate('Scanner')}>
-            <Text style={{fontSize:20, borderWidth:3, borderRadius:15, padding:'20%', borderColor:'blue'}}>Scannaa itemi</Text>
-          </Pressable>
-        </View>
-        <View style={{flex:1, justifyContent:'center', margin:30, padding:'15%'}}>
-        <Pressable style={{flex:1, justifyContent:'center'}} onPress={() => navigation.navigate('Item')}>
-            <Text style={{fontSize:20, borderWidth:3, borderRadius:15, padding:'20%', borderColor:'green'}}>Lisää itemi</Text>
-          </Pressable>
-        </View>
-        <View style={{flex:1, justifyContent:'center',margin:30, padding:'15%'}}>
-        <Pressable style={{flex:1, justifyContent:'center'}} onPress={() => navigation.navigate('ViewItems')}>
-            <Text style={{fontSize:20, borderWidth:3, borderRadius:15, padding:'20%', borderColor:'cyan'}}>Selaa itemeitä</Text>
-          </Pressable>
-        </View>
+    <View style={{ flex: 12, justifyContent: 'center', alignSelf: 'center' }}>
+      <Text style={{ textAlign: 'center', justifyContent: 'center', fontSize: 30, padding: '10%' }}>Jotain sisältöä</Text>
+      <View style={{ flex: 1, justifyContent: 'center', margin: 30, padding: '15%' }}>
+        <Pressable style={{ flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Scanner')}>
+          <Text style={{ fontSize: 20, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'blue' }}>Scannaa itemi</Text>
+        </Pressable>
+      </View>
+      <View style={{ flex: 1, justifyContent: 'center', margin: 30, padding: '15%' }}>
+        <Pressable style={{ flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Item')}>
+          <Text style={{ fontSize: 20, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'green' }}>Lisää itemi</Text>
+        </Pressable>
+      </View>
+      <View style={{ flex: 1, justifyContent: 'center', margin: 30, padding: '15%' }}>
+        <Pressable style={{ flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('ViewItems')}>
+          <Text style={{ fontSize: 20, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'cyan' }}>Selaa itemeitä</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
