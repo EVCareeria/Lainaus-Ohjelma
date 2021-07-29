@@ -52,9 +52,11 @@ export default function Scanner({ navigation }) {
 
   function closeDelete() {
     setDel(!del)
+    navigation.pop()
   }
   function closeUpdate() {
     setUpdate(!update)
+    navigation.pop()
   }
   function setUpdateModalFunc() {
     setUpdateModal(true)

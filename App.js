@@ -8,7 +8,6 @@ import * as SplashScreen from 'expo-splash-screen';
 //import useDatabase from './hooks/useDatabase'
 import HomeScreen, { ScannerStack } from './components/Homescreen';
 import ViewItems from './components/Pages/ViewItems';
-import Calendar from './components/Calendar'
 	
 
 export default function App() {
@@ -33,10 +32,7 @@ export default function App() {
         }}
         >
             <Tab.Screen name="Home" component={ScannerStack} />
-            <Tab.Screen name="Item" component={Item} />
             <Tab.Screen name="View Items" component={ViewItems} />
-            <Tab.Screen name="Calendar" component={Calendar} />
-          
         </Tab.Navigator>
       </NavigationContainer>
   );

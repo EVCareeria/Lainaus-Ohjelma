@@ -58,7 +58,7 @@ const Items = ({ navigation }) => {
       //   setNewId(newId +1)
       //  setItem({itemid: newId, itemname: name, codetype: codeType, codedata: codeData, image: image })
       // setItemInfo([...itemInfo, item])
-      Alert.alert('Item added to the list')
+      Alert.alert('Item' + {name} + 'added to the list')
       setName(null)
       setCodeType(null)
       setCodeData(null)
@@ -70,7 +70,7 @@ const Items = ({ navigation }) => {
       setImage(null)
       Alert.alert('Item was not added to the list')
     }
-    navigation.goBack()
+    navigation.pop()
   }
 
   const refreshItem = () => {

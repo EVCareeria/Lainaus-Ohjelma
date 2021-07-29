@@ -32,9 +32,11 @@ const ViewItems = ({navigation}) => {
 
   function updateFunction() {
     setUpdate(!update)
+    navigation.pop()
   }
   function deleteFunction() {
     setModalDelete(!modalDelete)
+    navigation.pop()
   }
 
   return(
