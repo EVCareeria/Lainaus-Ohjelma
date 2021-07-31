@@ -3,6 +3,7 @@ import { View, Pressable, Text } from 'react-native';
 import { DatabaseConnection } from './database/Database';
 import { createStackNavigator } from '@react-navigation/stack';
 import Scanner from './Scanner';
+import Item from './Item';
 import ViewItems from './Pages/ViewItems';
 
 const Stack = createStackNavigator();
@@ -14,6 +15,8 @@ export function ScannerStack() {
     <Stack.Navigator>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Scanner" component={Scanner} />
+      <Stack.Screen name="Item" component={Item} />
+      <Stack.Screen name="ViewItems" component={ViewItems} />
     </Stack.Navigator>
   );
 }
@@ -21,6 +24,10 @@ export function ScannerStack() {
 const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
+    /* db.transaction(function (txn) {
+      txn.executeSql('drop table items')
+    }) */
+    
     db.transaction(function (txn) {
       txn.executeSql(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='items'",
@@ -30,7 +37,7 @@ const HomeScreen = ({ navigation }) => {
           if (res.rows.length == 0) {
             txn.executeSql('DROP TABLE IF EXISTS items', []);
             txn.executeSql(
-              'CREATE TABLE IF NOT EXISTS items(item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name VARCHAR(30), codetype VARCHAR(25), codedata VARCHAR(255), image VARCHAR(255), loanstatus INTEGER)',
+              'CREATE TABLE IF NOT EXISTS items(item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name VARCHAR(30), codetype VARCHAR(25), codedata VARCHAR(255), image VARCHAR(255), )',
               []
             );
             console.log('Database lisätty')
@@ -41,6 +48,10 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    /* db.transaction(function (txn) {
+      txn.executeSql('drop table loantable')
+    }) */
+
     db.transaction(function (txn) {
       txn.executeSql(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='loantable'",
@@ -50,7 +61,7 @@ const HomeScreen = ({ navigation }) => {
           if (res.rows.length == 0) {
             txn.executeSql('DROP TABLE IF EXISTS loantable', []);
             txn.executeSql(
-              'CREATE TABLE IF NOT EXISTS loantable(loan_id INTEGER PRIMARY KEY AUTOINCREMENT, loaner VARCHAR(50), startdate VARCHAR(25), enddate VARCHAR(25), item_reference INTEGER REFERENCES items(item_id))',
+              'CREATE TABLE IF NOT EXISTS loantable(loan_id INTEGER PRIMARY KEY AUTOINCREMENT, loaner VARCHAR(50), startdate VARCHAR(25), enddate VARCHAR(25), loanstatus INTEGER, item_reference INTEGER REFERENCES items(item_id))',
               []
             );
             console.log('Taulu loantable lisätty')

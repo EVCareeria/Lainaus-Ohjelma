@@ -33,7 +33,7 @@ const initialData = [
 ]
 
 
-const Items = ({ navigation }) => {
+const Item = ({ navigation }) => {
   //const [dataBase, setDataBase] = useState([])
   const [itemInfo, setItemInfo] = useState(initialData)
   const [name, setName] = useState(null)
@@ -44,6 +44,7 @@ const Items = ({ navigation }) => {
   const [scanned, setScanned] = useState(false);
   const [imagePicker, setImagePicker] = useState(false)
   const [image, setImage] = useState(null);
+  const [loanStatus, setLoanStatus] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -55,10 +56,8 @@ const Items = ({ navigation }) => {
   function updateFunction() {
     if (name && codeType && codeData && image != null) {
       addToDB()
-      //   setNewId(newId +1)
-      //  setItem({itemid: newId, itemname: name, codetype: codeType, codedata: codeData, image: image })
-      // setItemInfo([...itemInfo, item])
-      Alert.alert('Item' + {name} + 'added to the list')
+      console.log(name + ' ' + codeType + ' ' + codeData + ' ' + image + ' ' + loanStatus)
+      Alert.alert('Item ' + name + ' added to the list')
       setName(null)
       setCodeType(null)
       setCodeData(null)
@@ -71,11 +70,6 @@ const Items = ({ navigation }) => {
       Alert.alert('Item was not added to the list')
     }
     navigation.pop()
-  }
-
-  const refreshItem = () => {
-    console.log(dataBase)
-    return database.getItems(setDataBase)
   }
 
   useEffect(() => {
@@ -92,8 +86,8 @@ const Items = ({ navigation }) => {
   function addToDB() {
     db.transaction(function (tx) {
       tx.executeSql(
-        'INSERT INTO items (item_name, codetype, codedata, image) VALUES (?,?,?,?)',
-        [name, codeType, codeData, image],
+        'INSERT INTO items (item_name, codetype, codedata, image, loanstatus) VALUES (?,?,?,?,?)',
+        [name, codeType, codeData, image, loanStatus],
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
@@ -237,4 +231,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Items;
+export default Item;

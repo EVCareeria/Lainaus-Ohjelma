@@ -32,7 +32,6 @@ export default function App() {
         }}
         >
             <Tab.Screen name="Home" component={ScannerStack} />
-            <Tab.Screen name="View Items" component={ViewItems} />
         </Tab.Navigator>
       </NavigationContainer>
   );

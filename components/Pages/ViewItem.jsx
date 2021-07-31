@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, SafeAreaView, Modal, Image, Button } from 'react-native'
 import { vw, vh } from 'react-native-expo-viewport-units';
 import { StyleSheet } from 'react-native';
@@ -8,41 +8,64 @@ import DeleteItem from './DeleteItem';
 import UpdateUser from './UpdateItem';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import LoanItem from './LoanItem';
-import { FontAwesome } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons';
+import { DatabaseConnection } from '../database/Database';
+
+const db = DatabaseConnection.getConnection();
 
 const ViewItem = (props) => {
   const [del, setDel] = useState(false)
   const [update, setUpdate] = useState(false)
   const [loan, setLoan] = useState(false)
+  const [currentLoans, setCurrentLoans] = useState()
+  const [now, setNow] = useState(new Date().toISOString())
+  const [weeks, setWeeks] = useState(new Date(Date.now() + (6.048e+8 * 2)).toISOString())
 
 
   const { itemID, itemName, codetype, codedata, image, setUpdateModal, setDeleteModal } = props
 
- /*  const showStartDatePicker = () => {
-    setStartDatePickerVisibility(true);
-  };
-  const showEndDatePicker = () => {
-    setEndDatePickerVisibility(true);
-  };
+  /*  const showStartDatePicker = () => {
+     setStartDatePickerVisibility(true);
+   };
+   const showEndDatePicker = () => {
+     setEndDatePickerVisibility(true);
+   };
+ 
+   const hideDatePicker = () => {
+     setStartDatePickerVisibility(false);
+     setEndDatePickerVisibility(false);
+   };
+ 
+   const handleStartConfirm = (startdate) => {
+     console.log("A startdate has been picked: ", startdate);
+     var newStartDate = new Date(startdate).toString().substring(0, 10)
+     setStartDate(newStartDate)
+     hideDatePicker();
+   };
+   const handleEndConfirm = (enddate) => {
+     console.log("A enddate has been picked: ", enddate);
+     var newEndDate = new Date(enddate).toString().substring(0, 10)
+     setEndDate(newEndDate)
+     hideDatePicker();
+   }; */
 
-  const hideDatePicker = () => {
-    setStartDatePickerVisibility(false);
-    setEndDatePickerVisibility(false);
-  };
+  useEffect(() => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT * FROM loantable WHERE item_reference=? AND startdate BETWEEN (?) AND (?) ORDER BY enddate DESC',
+        [itemID, now, weeks],
+        (tx, results) => {
+          var temp = [];
+          for (let i = 0; i < results.rows.length; ++i)
+          temp.push(i +1);
+          setCurrentLoans(temp)
+          console.log('setCurrentLoans ja jotain sellasta  ' + currentLoans)
+        }
+      );
+    });
+  }, [])
 
-  const handleStartConfirm = (startdate) => {
-    console.log("A startdate has been picked: ", startdate);
-    var newStartDate = new Date(startdate).toString().substring(0, 10)
-    setStartDate(newStartDate)
-    hideDatePicker();
-  };
-  const handleEndConfirm = (enddate) => {
-    console.log("A enddate has been picked: ", enddate);
-    var newEndDate = new Date(enddate).toString().substring(0, 10)
-    setEndDate(newEndDate)
-    hideDatePicker();
-  }; */
-  
+
 
   function closeDelete() {
     setDel(!del)
@@ -72,11 +95,11 @@ const ViewItem = (props) => {
           <Text style={styles.textbottom}>{itemID}</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.textheader}>Name</Text>
-            
+
             <MaterialIcons name="update" size={34} color="black" onPress={() => setUpdate(!update)} />
             <Entypo name="trash" size={34} color="black" onPress={() => setDel(!del)} />
           </View>
-          <Text style={{color: '#111',fontSize: 25, fontWeight:'600'}}>{itemName}</Text>
+          <Text style={{ color: '#111', fontSize: 25, fontWeight: '600' }}>{itemName}</Text>
           <Text style={styles.textheader}>Codetype</Text>
           <Text style={styles.textbottom}>{codetype}</Text>
           <Text style={styles.textheader}>Codedata</Text>
@@ -84,26 +107,28 @@ const ViewItem = (props) => {
           <Text style={styles.textheader}>Image</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
             <Image source={{ uri: image }} style={styles.ImageStyle} />
-            <View style={{ justifyContent: 'space-evenly', flexDirection:'column' }}>
+            <View style={{ justifyContent: 'space-evenly', flexDirection: 'column' }}>
               <Text style={styles.textheader}>Lainaa itemi</Text>
-              <FontAwesome name="handshake-o" size={34} color="black" onPress={() => setLoan(!loan)}/>
+              <FontAwesome name="handshake-o" size={34} color="black" onPress={() => setLoan(!loan)} />
             </View>
           </View>
-
+            <View>
+              <Text>Loaned for next 2 weeks: {currentLoans != 0 ? currentLoans : 0} times</Text>
+            </View>
         </View>
       </View>
       <View>
         {loan ? (<Modal
-        style={styles.modalStyle}
-        animationType='fade'
-        transparent={true}
-        visible={true}
+          style={styles.modalStyle}
+          animationType='fade'
+          transparent={true}
+          visible={true}
         >
           <View style={{ flex: 8, alignItems: 'center', justifyContent: 'center' }}>
             <LoanItem itemID={itemID} itemname={itemName} itemImage={image} closeLoan={closeLoan} setLoanModal={setLoanModalFunc} />
           </View>
         </Modal>)
-        : null}
+          : null}
         {del ? (<Modal
           style={styles.modalStyle}
           animationType="fade"
@@ -137,7 +162,7 @@ const styles = StyleSheet.create({
     color: '#111',
     fontSize: 12,
     fontWeight: '700',
-    margin:3,
+    margin: 3,
   },
   textbottom: {
     color: '#111',
@@ -154,7 +179,7 @@ const styles = StyleSheet.create({
     height: vh(15)
   },
   modalStyle: {
-    flex:8
+    flex: 8
   }
 });
 

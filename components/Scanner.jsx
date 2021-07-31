@@ -20,6 +20,7 @@ export default function Scanner({ navigation }) {
   const [flatListItems, setFlatListItems] = useState()
   const [del, setDel] = useState(false)
   const [update, setUpdate] = useState(false)
+  const [loan, setLoan] = useState(0)
 
   useEffect(() => {
     (async () => {
@@ -82,21 +83,20 @@ export default function Scanner({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={{ flex: 6, width: vw(90), height: vh(90) }}>
+    <SafeAreaView style={{ flex: 6}}>
       <View style={{ justifyContent: 'center', flex: 5, alignSelf: 'center' }}>
         {scanned != true ? (
           <Modal
-            style={{ flex: 1 }}
+            style={{ flex: 4 }}
             animationType="slide"
             transparent={true}
             visible={true}
           >
-            <View style={{ justifyContent: 'center', flex: 6 }}>
+            <View style={{ justifyContent: 'center', flex: 5 }}>
               <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={{ flex: 5, justifyContent: 'center' }}
+                style={{ flex: 4, justifyContent: 'center' }}
               />
-              {scanned && <Button style={{ flex: 1 }} />}
             </View>
           </Modal>
         ) : null}
@@ -105,41 +105,48 @@ export default function Scanner({ navigation }) {
             data={flatListItems}
             keyExtractor={(item) => item.item_id.toString()}
             renderItem={({ item }) => (
+              
               <View style={{ flex: 3, justifyContent: 'space-between', margin: 25, alignSelf: 'center' }}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={styles.textheader}>Name</Text>
-                  <MaterialIcons name="update" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setUpdate(!update)} />
-                  <Entypo name="trash" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setDel(!del)} />
-                </View>
-                <Text style={styles.textbottom}>{item.item_name}</Text>
-                <Text style={styles.textheader}>Codetype</Text>
-                <Text style={styles.textbottom}>{item.codetype}</Text>
-                <Text style={styles.textheader}>Codedata</Text>
-                <Text style={styles.textbottom}>{item.codedata}</Text>
-                <Text style={styles.textheader}>Image</Text>
-                <Image source={{ uri: item.image }} style={styles.ImageStyle} />
+                {setLoan(item.loanstatus)}
+                {loan === 0 ? 
                 <View>
-                  {del ? (<Modal
-                    style={{ flex: 5 }}
-                    animationType="slide"
-                    transparent={true}
-                    visible={true}>
-                    <View style={{ flex: 5, alignItems: 'center', justifyContent: 'center' }}>
-                      <DeleteItem itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeDelete={closeDelete} setDeleteModal={setDeleteModalFunc} />
-                    </View>
-                  </Modal>
-                  ) : null}
-                  {update ? (<Modal
-                    style={{ flex: 5 }}
-                    animationType="slide"
-                    transparent={true}
-                    visible={true}>
-                    <View style={{ flex: 5, alignItems: 'center', justifyContent: 'center', paddingBottom: '15%' }}>
-                      <UpdateUser itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeUpdate={closeUpdate} setUpdateModal={setUpdateModalFunc} />
-                    </View>
-                  </Modal>
-                  ) : null}
-                </View>
+                <View style={{ flexDirection: 'row' }}>
+                <Text style={styles.textheader}>Name</Text>
+                <MaterialIcons name="update" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setUpdate(!update)} />
+                <Entypo name="trash" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setDel(!del)} />
+              </View>
+              <Text style={styles.textbottom}>{item.item_name}</Text>
+              <Text style={styles.textheader}>Codetype</Text>
+              <Text style={styles.textbottom}>{item.codetype}</Text>
+              <Text style={styles.textheader}>Codedata</Text>
+              <Text style={styles.textbottom}>{item.codedata}</Text>
+              <Text style={styles.textheader}>Image</Text>
+              <Image source={{ uri: item.image }} style={styles.ImageStyle} />
+              <View>
+                {del ? (<Modal
+                  style={{ flex: 5 }}
+                  animationType="slide"
+                  transparent={true}
+                  visible={true}>
+                  <View style={{ flex: 5, alignItems: 'center', justifyContent: 'center' }}>
+                    <DeleteItem itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeDelete={closeDelete} setDeleteModal={setDeleteModalFunc} />
+                  </View>
+                </Modal>
+                ) : null}
+                {update ? (<Modal
+                  style={{ flex: 5 }}
+                  animationType="slide"
+                  transparent={true}
+                  visible={true}>
+                  <View style={{ flex: 5, alignItems: 'center', justifyContent: 'center', paddingBottom: '15%' }}>
+                    <UpdateUser itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeUpdate={closeUpdate} setUpdateModal={setUpdateModalFunc} />
+                  </View>
+                </Modal>
+                ) : null}
+              </View>
+              </View>
+                : null }
+                
               </View>
             )}
           />

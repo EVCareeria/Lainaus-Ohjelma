@@ -29,6 +29,7 @@ const ViewItems = ({navigation}) => {
       );
     });
   }, [update, modalDelete]);
+  
 
   function updateFunction() {
     setUpdate(!update)
@@ -40,14 +41,14 @@ const ViewItems = ({navigation}) => {
   }
 
   return(
-    <SafeAreaView style={{flex:12}}>
-      <Pressable onPress={() => setUpdate(!update)} style={{flex:1, justifyContent:'center', borderWidth:3, borderRadius:15, margin:15, borderColor:'blue', marginTop:50}}>
+    <SafeAreaView style={{flex:10}}>
+      <Pressable onPress={() => setUpdate(!update)} style={{flex:1, justifyContent:'center', borderWidth:3, borderRadius:15, margin:15, borderColor:'blue', marginTop:20}}>
             <Text style={{textAlign:'center', fontSize:30}}>Update current list</Text>
         </Pressable>
-      <View style={{flex:11}}>
-        <ScrollView fadingEdgeLength={150}>
+      <View style={{flex:9}}>
+        <ScrollView fadingEdgeLength={100}>
             {flatListItems.map((i) => (
-              <Pressable style={{flex:1, margin: 10}} key={i.item_id}>
+              <Pressable style={{flex:1, margin: 6}} key={i.item_id}>
                 <ViewItem itemID={i.item_id} itemName={i.item_name} codetype={i.codetype} codedata={i.codedata} image={i.image} setUpdateModal={updateFunction} setDeleteModal={deleteFunction} />
               </Pressable>
             ))}
