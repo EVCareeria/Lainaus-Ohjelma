@@ -27,6 +27,10 @@ const HomeScreen = ({ navigation }) => {
     /* db.transaction(function (txn) {
       txn.executeSql('drop table items')
     }) */
+
+    db.exec([{ sql: 'PRAGMA foreign_keys = ON;', args: [] }], false, () =>
+      console.log('Foreign keys turned on')
+    );
     
     db.transaction(function (txn) {
       txn.executeSql(
@@ -37,7 +41,7 @@ const HomeScreen = ({ navigation }) => {
           if (res.rows.length == 0) {
             txn.executeSql('DROP TABLE IF EXISTS items', []);
             txn.executeSql(
-              'CREATE TABLE IF NOT EXISTS items(item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name VARCHAR(30), codetype VARCHAR(25), codedata VARCHAR(255), image VARCHAR(255), )',
+              'CREATE TABLE IF NOT EXISTS items(item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name VARCHAR(30), codetype VARCHAR(25), codedata VARCHAR(255), image VARCHAR(255))',
               []
             );
             console.log('Database lisätty')

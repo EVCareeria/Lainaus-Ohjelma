@@ -50,14 +50,14 @@ const ViewItem = (props) => {
    }; */
 
   useEffect(() => {
+    setCurrentLoans(0)
     db.transaction((tx) => {
       tx.executeSql(
-        'SELECT * FROM loantable WHERE item_reference=? AND startdate BETWEEN (?) AND (?) ORDER BY enddate DESC',
+        'SELECT * FROM loantable WHERE (item_reference=(?) AND startdate) OR (item_reference=(?) AND enddate) BETWEEN (?) AND (?)',
         [itemID, now, weeks],
         (tx, results) => {
           var temp = [];
-          for (let i = 0; i < results.rows.length; ++i)
-          temp.push(i +1);
+            temp.push(results.rows.length);
           setCurrentLoans(temp)
           console.log('setCurrentLoans ja jotain sellasta  ' + currentLoans)
         }
@@ -93,11 +93,12 @@ const ViewItem = (props) => {
         <View style={{ margin: 20, borderWidth: 1, padding: 15, flex: 1 }}>
           <Text style={styles.textheader}>ID</Text>
           <Text style={styles.textbottom}>{itemID}</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex:1 }}>
             <Text style={styles.textheader}>Name</Text>
-
-            <MaterialIcons name="update" size={34} color="black" onPress={() => setUpdate(!update)} />
-            <Entypo name="trash" size={34} color="black" onPress={() => setDel(!del)} />
+            <View style={{flexDirection: 'row', justifyContent:'space-around', width:'40%'}}>
+              <MaterialIcons name="update" size={34} color="black" onPress={() => setUpdate(!update)} />
+              <Entypo name="trash" size={34} color="black" onPress={() => setDel(!del)} />
+            </View>
           </View>
           <Text style={{ color: '#111', fontSize: 25, fontWeight: '600' }}>{itemName}</Text>
           <Text style={styles.textheader}>Codetype</Text>
@@ -112,9 +113,9 @@ const ViewItem = (props) => {
               <FontAwesome name="handshake-o" size={34} color="black" onPress={() => setLoan(!loan)} />
             </View>
           </View>
-            <View>
-              <Text>Loaned for next 2 weeks: {currentLoans != 0 ? currentLoans : 0} times</Text>
-            </View>
+          <View>
+            <Text style={styles.textbottom}>Loaned for next 2 weeks: {currentLoans != 0 ? currentLoans : 0} times</Text>
+          </View>
         </View>
       </View>
       <View>
@@ -160,7 +161,7 @@ const ViewItem = (props) => {
 const styles = StyleSheet.create({
   textheader: {
     color: '#111',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
     margin: 3,
   },
@@ -169,8 +170,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   IoniconsStyle: {
-    left: vw(50),
-    paddingLeft: 10
+    left: vw(15),
+    paddingLeft: 10,
   },
   ImageStyle: {
     flexWrap: 'wrap',

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Alert, SafeAreaView, Image, Text, Pressable } from 'react-native';
 import { DatabaseConnection } from '../database/Database';
 import { vw, vh } from 'react-native-expo-viewport-units';
+import { StyleSheet } from 'react-native';
 
 const db = DatabaseConnection.getConnection();
 
@@ -35,8 +36,8 @@ const DeleteItem = (props) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 12 }}>
-      <View style={{ flex: 10, backgroundColor: 'white', margin:50 }}>
+    <SafeAreaView style={StyleSheet.absoluteFillObject}>
+      <View style={{ flex: 6, flexDirection:'column', backgroundColor: 'white', justifyContent: 'center', paddingBottom:'20%', paddingTop: '20%' }}>
           <Pressable onPress={returnBack} style={{flex:1, alignContent:'center', backgroundColor:'white', zIndex:0}}>
             <Text style={{alignSelf:'center', justifyContent:'center', fontSize:30, borderWidth:2, borderRadius:15, padding:15,backgroundColor:'yellow', opacity:0.7}}>Sulje Modal Ikkuna</Text>
           </Pressable>
@@ -51,5 +52,20 @@ const DeleteItem = (props) => {
     </SafeAreaView>
   );
 };
+const styles = StyleSheet.create({
+  textheader: {
+    color: '#111',
+    fontSize: 12,
+    fontWeight: '700',
+
+  },
+  textbottom: {
+    color: '#111',
+    fontSize: 18,
+  }, 
+  IoniconsStyle: {
+    marginLeft: vw(40),
+  }
+});
 
 export default DeleteItem;

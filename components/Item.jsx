@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Platform, TextInput, Pressable, Alert, Modal, B
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
 import { favi } from '../assets/favicon.png'
-import Task from './Task'
 import { DatabaseConnection } from './database/Database';
 
 const db = DatabaseConnection.getConnection();
@@ -44,7 +43,6 @@ const Item = ({ navigation }) => {
   const [scanned, setScanned] = useState(false);
   const [imagePicker, setImagePicker] = useState(false)
   const [image, setImage] = useState(null);
-  const [loanStatus, setLoanStatus] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -56,12 +54,7 @@ const Item = ({ navigation }) => {
   function updateFunction() {
     if (name && codeType && codeData && image != null) {
       addToDB()
-      console.log(name + ' ' + codeType + ' ' + codeData + ' ' + image + ' ' + loanStatus)
       Alert.alert('Item ' + name + ' added to the list')
-      setName(null)
-      setCodeType(null)
-      setCodeData(null)
-      setImage(null)
     } else {
       setName(null)
       setCodeType(null)
@@ -86,16 +79,15 @@ const Item = ({ navigation }) => {
   function addToDB() {
     db.transaction(function (tx) {
       tx.executeSql(
-        'INSERT INTO items (item_name, codetype, codedata, image, loanstatus) VALUES (?,?,?,?,?)',
-        [name, codeType, codeData, image, loanStatus],
+        'INSERT INTO items (item_name, codetype, codedata, image) VALUES (?,?,?,?)',
+        [name, codeType, codeData, image],
         (tx, results) => {
+          console.log(name + ' ' + codeType + ' ' + codeData + ' ' + image )
           console.log('Results', results.rowsAffected);
-          if (results.rowsAffected > 0) {
-            Alert.alert(
-              'success',
-              'item added to database',
-            );
-          } else alert('Error while adding item to database');
+          setName(null)
+          setCodeType(null)
+          setCodeData(null)
+          setImage(null)
         }
       );
     });
@@ -191,7 +183,7 @@ const Item = ({ navigation }) => {
 
       <Pressable onPress={() => updateFunction()} style={{ justifyContent: 'center', alignSelf: 'center', borderRadius: 20, borderWidth: 1, width: '40%', height: '8%', alignItems: 'center', backgroundColor: 'white', margin: 10 }}>
         <Text style={{ fontSize: 20 }}>
-          Lisää tuote
+          Lisää itemi
         </Text>
       </Pressable>
     </View>

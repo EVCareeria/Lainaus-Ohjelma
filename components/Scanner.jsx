@@ -4,10 +4,12 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import { DatabaseConnection } from './database/Database';
 import { StyleSheet } from 'react-native';
 import { vw, vh } from 'react-native-expo-viewport-units';
+import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import DeleteItem from './Pages/DeleteItem';
 import UpdateUser from './Pages/UpdateItem';
+import LoanItem from './Pages/LoanItem';
 
 const db = DatabaseConnection.getConnection();
 
@@ -55,6 +57,10 @@ export default function Scanner({ navigation }) {
     setDel(!del)
     navigation.pop()
   }
+  function closeLoan() {
+    setLoan(!loan)
+    navigation.pop()
+  }
   function closeUpdate() {
     setUpdate(!update)
     navigation.pop()
@@ -62,17 +68,20 @@ export default function Scanner({ navigation }) {
   function setUpdateModalFunc() {
     setUpdateModal(true)
   }
+  function setLoanModalFunc() {
+    setLoanModal(true)
+  }
   function setDeleteModalFunc() {
     setDeleteModal(true)
   }
 
   const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     setCodeType(type)
     setCodeData(data.toString())
     setScannerItem(!scannerItem)
     console.log('Lisää testiä')
+    setScanned(true);
   };
 
   if (hasPermission === null) {
@@ -83,8 +92,8 @@ export default function Scanner({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={{ flex: 6}}>
-      <View style={{ justifyContent: 'center', flex: 5, alignSelf: 'center' }}>
+    <SafeAreaView style={{ flex: 6 }}>
+      <View style={StyleSheet.absoluteFillObject}>
         {scanned != true ? (
           <Modal
             style={{ flex: 4 }}
@@ -100,53 +109,61 @@ export default function Scanner({ navigation }) {
             </View>
           </Modal>
         ) : null}
-        <View style={{ flex: 2, justifyContent: 'center', alignSelf: 'center', width: vw(80), height: vh(40), paddingTop: vh(10) }}>
+        <View style={{ flex: 5, justifyContent: 'center', alignSelf: 'center', paddingTop: vh(10), width: '100%', height: '90%' }}>
           <FlatList
             data={flatListItems}
             keyExtractor={(item) => item.item_id.toString()}
             renderItem={({ item }) => (
-              
-              <View style={{ flex: 3, justifyContent: 'space-between', margin: 25, alignSelf: 'center' }}>
-                {setLoan(item.loanstatus)}
-                {loan === 0 ? 
-                <View>
-                <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.textheader}>Name</Text>
-                <MaterialIcons name="update" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setUpdate(!update)} />
-                <Entypo name="trash" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setDel(!del)} />
-              </View>
-              <Text style={styles.textbottom}>{item.item_name}</Text>
-              <Text style={styles.textheader}>Codetype</Text>
-              <Text style={styles.textbottom}>{item.codetype}</Text>
-              <Text style={styles.textheader}>Codedata</Text>
-              <Text style={styles.textbottom}>{item.codedata}</Text>
-              <Text style={styles.textheader}>Image</Text>
-              <Image source={{ uri: item.image }} style={styles.ImageStyle} />
-              <View>
-                {del ? (<Modal
-                  style={{ flex: 5 }}
-                  animationType="slide"
-                  transparent={true}
-                  visible={true}>
-                  <View style={{ flex: 5, alignItems: 'center', justifyContent: 'center' }}>
-                    <DeleteItem itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeDelete={closeDelete} setDeleteModal={setDeleteModalFunc} />
+
+              <View style={{ flex: 5 }}>
+                <View style={{ justifyContent: 'center', alignSelf: 'center' }}>
+                  <View style={{ flexDirection: 'row', maxWidth: '50%' }}>
+                    <Text style={styles.textheader}>Name</Text>
+                    <MaterialIcons name="update" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setUpdate(!update)} />
+                    <Entypo name="trash" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setDel(!del)} />
+                    <FontAwesome name="handshake-o" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setLoan(!loan)} />
                   </View>
-                </Modal>
-                ) : null}
-                {update ? (<Modal
-                  style={{ flex: 5 }}
-                  animationType="slide"
-                  transparent={true}
-                  visible={true}>
-                  <View style={{ flex: 5, alignItems: 'center', justifyContent: 'center', paddingBottom: '15%' }}>
-                    <UpdateUser itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeUpdate={closeUpdate} setUpdateModal={setUpdateModalFunc} />
+                  <Text style={styles.textbottom}>{item.item_name}</Text>
+                  <Text style={styles.textheader}>Codetype</Text>
+                  <Text style={styles.textbottom}>{item.codetype}</Text>
+                  <Text style={styles.textheader}>Codedata</Text>
+                  <Text style={styles.textbottom}>{item.codedata}</Text>
+                  <Text style={styles.textheader}>Image</Text>
+                  <Image source={{ uri: item.image }} style={styles.ImageStyle} />
+                  <View>
+                    {loan ? (<Modal
+                      style={styles.modalStyle}
+                      animationType='fade'
+                      transparent={true}
+                      visible={true}
+                    >
+                      <View style={{ flex: 8, alignItems: 'center', justifyContent: 'center' }}>
+                        <LoanItem itemID={item.item_id} itemname={item.item_name} itemImage={item.image} closeLoan={closeLoan} setLoanModal={setLoanModalFunc} />
+                      </View>
+                    </Modal>)
+                      : null}
+                    {del ? (<Modal
+                      style={{ flex: 3 }}
+                      animationType="slide"
+                      transparent={true}
+                      visible={true}>
+                      <View style={{ flex: 5, alignItems: 'center', justifyContent: 'center' }}>
+                        <DeleteItem itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeDelete={closeDelete} setDeleteModal={setDeleteModalFunc} />
+                      </View>
+                    </Modal>
+                    ) : null}
+                    {update ? (<Modal
+                      style={{ flex: 3 }}
+                      animationType="slide"
+                      transparent={true}
+                      visible={true}>
+                      <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center', paddingBottom: '15%' }}>
+                        <UpdateUser itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeUpdate={closeUpdate} setUpdateModal={setUpdateModalFunc} />
+                      </View>
+                    </Modal>
+                    ) : null}
                   </View>
-                </Modal>
-                ) : null}
-              </View>
-              </View>
-                : null }
-                
+                </View>
               </View>
             )}
           />
@@ -162,20 +179,23 @@ const styles = StyleSheet.create({
     color: '#111',
     fontSize: 12,
     fontWeight: '700',
-
+    margin: 3,
   },
   textbottom: {
     color: '#111',
     fontSize: 18,
   },
   IoniconsStyle: {
-    left: vw(25),
-    paddingLeft: 10
+    left: vw(15),
+    paddingLeft: 10,
   },
   ImageStyle: {
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     width: vw(35),
     height: vh(15)
+  },
+  modalStyle: {
+    flex: 8
   }
 });
