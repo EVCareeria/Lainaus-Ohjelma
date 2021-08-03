@@ -4,6 +4,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
 import { favi } from '../assets/favicon.png'
 import { DatabaseConnection } from './database/Database';
+import { vw, vh } from 'react-native-expo-viewport-units';
 
 const db = DatabaseConnection.getConnection();
 
@@ -128,20 +129,19 @@ const Item = ({ navigation }) => {
     if (!result.cancelled) {
       setImage(result.uri);
     }
-    setTimeout(function () { setImagePicker(false) }, 3000)
+    setTimeout(function () { setImagePicker(false) }, 2000)
   };
 
 
 
   return (
-    <View style={{ flex: 12, backgroundColor: "#b5800d", justifyContent: 'space-evenly', alignItems: 'center' }}>
-
+    <View style={{ flex: 12, backgroundColor:'#FAEBB6', justifyContent: 'space-evenly', alignItems: 'center' }}>
       <View style={styles.Add}>
-        <Text style={{ fontSize: 20 }}>Lisää laitteen nimi</Text>
+        <Text style={styles.textheader}>Lisää laitteen nimi</Text>
         <TextInput value={name} onChangeText={name => setName(name)} />
       </View>
-      <Pressable onPress={() => setScanner(!scanner)} style={{ height: '10%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignContent: 'center', margin: '5%' }}>
-        <Text style={{ textAlign: 'center', backgroundColor: 'white', height: 40, fontSize: 20 }}>Lisää laitteen viivakoodi</Text>
+      <Pressable onPress={() => setScanner(!scanner)} style={{ height: '10%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignItems: 'center', margin: '5%', flex:1 }}>
+        <Text style={styles.textheader}>Lisää laitteen viivakoodi</Text>
         {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
         {scanner ? (
           <Modal
@@ -163,8 +163,8 @@ const Item = ({ navigation }) => {
           </Modal>
         ) : null}
       </Pressable>
-      <Pressable onPress={() => setImagePicker(!imagePicker)} style={{ height: '10%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignContent: 'center', margin: '5%' }}>
-        <Text style={{ textAlign: 'center', backgroundColor: 'white', height: 40, fontSize: 20 }}>Lisää laitteen kuva</Text>
+      <Pressable onPress={() => setImagePicker(!imagePicker)} style={{ height: '10%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignItems: 'center', margin: '5%', flex:1 }}>
+        <Text style={styles.textheader}>Lisää laitteen kuva</Text>
         {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
         {imagePicker ? (
           <Modal
@@ -181,8 +181,8 @@ const Item = ({ navigation }) => {
         ) : null}
       </Pressable>
 
-      <Pressable onPress={() => updateFunction()} style={{ justifyContent: 'center', alignSelf: 'center', borderRadius: 20, borderWidth: 1, width: '40%', height: '8%', alignItems: 'center', backgroundColor: 'white', margin: 10 }}>
-        <Text style={{ fontSize: 20 }}>
+      <Pressable onPress={() => updateFunction()} style={{ justifyContent: 'center', alignSelf: 'center', borderRadius: 20, borderWidth: 1, width: '40%', height: '8%', alignItems: 'center', backgroundColor: 'white', margin: 10, flex:1 }}>
+        <Text style={styles.textheader}>
           Lisää itemi
         </Text>
       </Pressable>
@@ -206,7 +206,8 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     marginTop: '5%',
     width: '85%',
-    borderRadius: 20
+    borderRadius: 20,
+    flex:1,
   },
   items: {
     width: '85%',
@@ -220,7 +221,43 @@ const styles = StyleSheet.create({
     margin: 5,
     borderWidth: 2,
     backgroundColor: '#f5f5f5'
-  }
+  },textheader: {
+    color: '#111',
+    fontSize: 26,
+    fontWeight: '700',
+    margin: 2,
+    fontFamily: 'RobotoMedium',
+  },
+  textbottom: {
+    color: '#111',
+    fontSize: 22,
+    fontFamily: 'AssistantMedium',
+    textDecorationLine: 'underline',
+  },
+  ImageStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    width: vw(70),
+    height: vh(20),
+    margin: '15%',
+  },
+  PressableStyle: {
+    height: '10%',
+    width: '90%',
+    backgroundColor: 'white',
+    borderWidth: 3,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignSelf: 'center'
+  }, PressableTextStyle: {
+    color: '#111',
+    fontSize: 22,
+    fontWeight: '500',
+    margin: 2,
+    fontFamily: 'RobotoMedium',
+    textAlign: 'center',
+  },
 })
 
 export default Item;

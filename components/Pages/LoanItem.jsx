@@ -47,11 +47,10 @@ const LoanItem = (props) => {
   useEffect(() => {
     console.log('nyt  ' + now)
     console.log('Haettavan tiedon takaraja  ' + weeks)
-
     db.transaction((tx) => {
       tx.executeSql(
-        'SELECT * FROM loantable WHERE (item_reference=(?) AND startdate) OR (item_reference=(?) AND enddate) BETWEEN (?) AND (?) ORDER BY startdate ASC',
-        [itemID, now, weeks],
+        'SELECT * FROM loantable WHERE (item_reference=(?) AND loanstatus=(?) AND startdate) OR (item_reference=(?) AND loanstatus=(?) AND enddate) BETWEEN (?) AND (?) ORDER BY startdate ASC',
+        [itemID, 1, itemID, 1, now, weeks],
         (tx, results) => {
           var tempA = [];
           for (let i = 0; i < results.rows.length; ++i)
@@ -62,25 +61,30 @@ const LoanItem = (props) => {
         }
       );
     });
-
   }, []);
   function addToDB() {
     if (loaner && startDate && endDate != null) {
       console.log(loaner)
       console.log(startDate)
       console.log(endDate)
-      db.transaction(function (tx) {
-        tx.executeSql(
-          'INSERT INTO loantable (loaner, startdate, enddate, loanstatus, item_reference ) VALUES (?,?,?,?,?)',
-          [loaner, startDate, endDate, 1, itemID],
-          (tx, results) => {
-            console.log('adding item now ....')
-            console.log('Results', results.rowsAffected);
-            if (results.rowsAffected > 0) {
-            } else alert('Error while adding item to database');
-          }
-        );
-      });
+      if (startDate >= endDate) {
+        Alert.alert('Start date cant be larger than end date')
+      } else {
+        db.transaction(function (tx) {
+          tx.executeSql(
+            'INSERT INTO loantable (loaner, startdate, enddate, loanstatus, item_reference ) VALUES (?,?,?,?,?)',
+            [loaner, startDate, endDate, 1, itemID],
+            (tx, results) => {
+              console.log('adding item now ....')
+              Alert.alert('Item ' + props.itemname + ' Loaned')
+
+              console.log('Results', results.rowsAffected);
+              if (results.rowsAffected > 0) {
+              } else alert('Error while adding item to database');
+            }
+          );
+        });
+      }
     }
     nullifyStates()
   }
@@ -156,25 +160,19 @@ const LoanItem = (props) => {
     closeLoan(false)
   }
   return (
-    <SafeAreaView style={{ flex: 8, width: '95%', backgroundColor: 'white' }}>
+    <SafeAreaView style={{ flex: 12, width: '95%', backgroundColor: 'white' }}>
       <View style={StyleSheet.absoluteFillObject}>
         <Pressable onPress={returnBack} style={styles.modalPressableStyle}>
           <Text style={styles.ModalTextStyle}>Sulje Modal Ikkuna</Text>
         </Pressable>
-        <View style={{ justifyContent: 'space-evenly', flexDirection: 'row' }}>
-          <Text style={styles.textheader}>Loan Item:</Text>
+        <View style={{ justifyContent: 'space-evenly', flexDirection: 'row', padding: '1%' }}>
+          <Text style={styles.textheader}>Loan Item: {itemname}</Text>
           <Text style={styles.textheader}>Loan ID: {itemID}</Text>
-          <Text style={styles.textheader}>{itemname}</Text>
         </View>
-
-        <Text style={styles.textheader}>Image</Text>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-          <Image source={{ uri: itemImage }} style={styles.ImageStyle} />
-          <View style={{ justifyContent: 'space-evenly', flexDirection: 'column' }}>
-
-          </View>
+        <View style={{ flexDirection: 'row' }}>
+          {itemImage ? <Image source={{ uri: itemImage }} style={styles.ImageStyle} /> : null}
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: '1%' }}>
           <View style={{ width: '35%' }}>
             <Button title="Pick Planned start date" onPress={showStartDatePicker} />
             <DateTimePickerModal
@@ -194,7 +192,7 @@ const LoanItem = (props) => {
             />
           </View>
         </View>
-        <Text style={{ fontSize: 20, textAlign: 'center' }}>Anna nimesi</Text>
+        <Text style={styles.textheader}>Anna nimesi</Text>
         <TextInput
           placeholder="Loaner name"
           value={loaner}
@@ -213,18 +211,21 @@ const LoanItem = (props) => {
         <Pressable onPress={() => addToDB()} style={{ flex: 1, justifyContent: 'center' }}>
           <Text style={{ fontSize: 26, textAlign: 'center', borderWidth: 3 }}>Loan now</Text>
         </Pressable>
-        <View style={{ flex: 6 }}>
+        <View style={{ flex: 8 }}>
           <ScrollView fadingEdgeLength={100}>
             {flatListItems != null ? flatListItems.map((i) => (
               <View style={{ flex: 1, margin: 10, borderRadius: 15, borderWidth: 3 }} key={i.loan_id}>
                 <Text style={styles.textheader}> Startdate: {moment(i.startdate).format('DD-MM-YYYY')}</Text>
                 <Text style={styles.textheader}> Enddate: {moment(i.enddate).format('DD-MM-YYYY')}</Text>
-                <Text style={styles.textheader}> Loaner: {i.loaner}</Text>
-                {i.loanstatus === 1 ?
-                  <Pressable onPress={() => showConfirmDialog(i.loan_id)}>
-                    <Text style={{ textAlign: 'right', fontSize: 24, margin: 4 }}>Return device</Text>
-                  </Pressable>
-                  : null}
+                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                  <Text style={styles.textheader}> Loaner: {i.loaner}</Text>
+                  {i.loanstatus === 1 ?
+                    <Pressable onPress={() => showConfirmDialog(i.loan_id)}>
+                      <Text style={{ textAlign: 'right', fontSize: 24, margin: 4 }}>Return device</Text>
+                    </Pressable>
+                    : null}
+                </View>
+
 
               </View>
             )) : null}
@@ -255,19 +256,42 @@ const styles = StyleSheet.create({
   },
   textheader: {
     color: '#111',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '700',
-    margin: 3,
-    textAlign: 'left',
+    margin: 2,
+    fontFamily: 'RobotoMedium',
+    textAlign: 'center',
+  },
+  textbottom: {
+    color: '#111',
+    fontSize: 22,
+    fontFamily: 'AssistantMedium',
+    textDecorationLine: 'underline',
   },
   ImageStyle: {
-    flexWrap: 'wrap',
-    width: vw(35),
-    height: vh(15)
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    width: vw(70),
+    height: vh(20),
+    margin: '5%',
   },
-  LoanedStyle: {
-    backgroundColor: 'green',
+  PressableStyle: {
+    height: '10%',
+    width: '90%',
+    backgroundColor: 'white',
+    borderWidth: 3,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignSelf: 'center'
+  }, PressableTextStyle: {
+    color: '#111',
+    fontSize: 22,
+    fontWeight: '500',
+    margin: 2,
+    fontFamily: 'RobotoMedium',
+    textAlign: 'center',
   }
-})
+});
 
 export default LoanItem

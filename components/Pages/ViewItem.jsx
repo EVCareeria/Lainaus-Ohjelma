@@ -6,7 +6,6 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import DeleteItem from './DeleteItem';
 import UpdateUser from './UpdateItem';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import LoanItem from './LoanItem';
 import { FontAwesome } from '@expo/vector-icons';
 import { DatabaseConnection } from '../database/Database';
@@ -24,40 +23,16 @@ const ViewItem = (props) => {
 
   const { itemID, itemName, codetype, codedata, image, setUpdateModal, setDeleteModal } = props
 
-  /*  const showStartDatePicker = () => {
-     setStartDatePickerVisibility(true);
-   };
-   const showEndDatePicker = () => {
-     setEndDatePickerVisibility(true);
-   };
- 
-   const hideDatePicker = () => {
-     setStartDatePickerVisibility(false);
-     setEndDatePickerVisibility(false);
-   };
- 
-   const handleStartConfirm = (startdate) => {
-     console.log("A startdate has been picked: ", startdate);
-     var newStartDate = new Date(startdate).toString().substring(0, 10)
-     setStartDate(newStartDate)
-     hideDatePicker();
-   };
-   const handleEndConfirm = (enddate) => {
-     console.log("A enddate has been picked: ", enddate);
-     var newEndDate = new Date(enddate).toString().substring(0, 10)
-     setEndDate(newEndDate)
-     hideDatePicker();
-   }; */
 
   useEffect(() => {
     setCurrentLoans(0)
     db.transaction((tx) => {
       tx.executeSql(
         'SELECT * FROM loantable WHERE (item_reference=(?) AND startdate) OR (item_reference=(?) AND enddate) BETWEEN (?) AND (?)',
-        [itemID, now, weeks],
+        [itemID, itemID, now, weeks],
         (tx, results) => {
           var temp = [];
-            temp.push(results.rows.length);
+          temp.push(results.rows.length);
           setCurrentLoans(temp)
           console.log('setCurrentLoans ja jotain sellasta  ' + currentLoans)
         }
@@ -90,27 +65,19 @@ const ViewItem = (props) => {
   return (
     <SafeAreaView style={{ flex: 6 }}>
       <View>
-        <View style={{ margin: 20, borderWidth: 1, padding: 15, flex: 1 }}>
-          <Text style={styles.textheader}>ID</Text>
-          <Text style={styles.textbottom}>{itemID}</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', flex:1 }}>
+        <View style={{ borderWidth: 1, padding: '2%', flex: 1, backgroundColor:'#F6F4EC' }}>
+            <View style={{ flexDirection: 'row', justifyContent:'space-between' }}>
             <Text style={styles.textheader}>Name</Text>
-            <View style={{flexDirection: 'row', justifyContent:'space-around', width:'40%'}}>
-              <MaterialIcons name="update" size={34} color="black" onPress={() => setUpdate(!update)} />
-              <Entypo name="trash" size={34} color="black" onPress={() => setDel(!del)} />
+            <Text style={styles.textbottom}>{itemName}</Text>
+              <MaterialIcons name="update" size={38} color="black" onPress={() => setUpdate(!update)} />
+              <Entypo name="trash" size={38} color="black" onPress={() => setDel(!del)} />
             </View>
-          </View>
-          <Text style={{ color: '#111', fontSize: 25, fontWeight: '600' }}>{itemName}</Text>
-          <Text style={styles.textheader}>Codetype</Text>
-          <Text style={styles.textbottom}>{codetype}</Text>
-          <Text style={styles.textheader}>Codedata</Text>
-          <Text style={styles.textbottom}>{codedata}</Text>
-          <Text style={styles.textheader}>Image</Text>
+          
           <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
             <Image source={{ uri: image }} style={styles.ImageStyle} />
             <View style={{ justifyContent: 'space-evenly', flexDirection: 'column' }}>
               <Text style={styles.textheader}>Lainaa itemi</Text>
-              <FontAwesome name="handshake-o" size={34} color="black" onPress={() => setLoan(!loan)} />
+              <FontAwesome name="handshake-o" size={38} color="black" onPress={() => setLoan(!loan)} />
             </View>
           </View>
           <View>
@@ -161,23 +128,23 @@ const ViewItem = (props) => {
 const styles = StyleSheet.create({
   textheader: {
     color: '#111',
-    fontSize: 15,
+    fontSize: 26,
     fontWeight: '700',
-    margin: 3,
+    margin: 2,
+    fontFamily: 'RobotoMedium',
   },
   textbottom: {
     color: '#111',
-    fontSize: 18,
-  },
-  IoniconsStyle: {
-    left: vw(15),
-    paddingLeft: 10,
+    fontSize: 22,
+    fontFamily: 'AssistantMedium',
+    textDecorationLine: 'underline',
   },
   ImageStyle: {
-    flexWrap: 'wrap',
+    flex: 1,
     justifyContent: 'space-around',
-    width: vw(35),
-    height: vh(15)
+    width: vw(30),
+    height: vh(10),
+    margin: '5%',
   },
   modalStyle: {
     flex: 8

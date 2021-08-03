@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, KeyboardAvoidingView, Alert, SafeAreaView, Text, Image, TextInput, Pressable, Modal, Button, StyleSheet } from 'react-native';
+import { View, KeyboardAvoidingView, Alert, SafeAreaView, Text, Image, TextInput, Pressable, Modal, Button, StyleSheet } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
+import { vw, vh } from 'react-native-expo-viewport-units';
 
 
 import { DatabaseConnection } from '../database/Database'
@@ -90,7 +91,7 @@ const UpdateItem = (props) => {
     setTimeout(function () { setImagePicker(false) }, 2000)
   };
 
-  const updateItem = () => {
+  const updateItemFunc = () => {
     console.log(itemName, codeType, codeData, itemImage);
 
     if (!itemName) {
@@ -135,71 +136,110 @@ const UpdateItem = (props) => {
       <View style={{ flex: 6, backgroundColor: 'white', justifyContent: 'center' }}>
         <View style={{ flex: 1, padding: 25 }}>
           <Pressable onPress={returnBack} style={{ alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
-            <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: 15, backgroundColor: 'yellow', opacity: 0.7 }}>Sulje Modal Ikkuna</Text>
+            <Text style={{ textAlign: 'center', fontSize: 30, fontFamily: 'RobotoMedium', justifyContent: 'center', borderWidth: 2, borderRadius: 15, padding: 10, backgroundColor: 'yellow', opacity: 0.7 }}>Sulje Modal Ikkuna</Text>
           </Pressable>
-            <KeyboardAvoidingView
-              style={{ flex: 1, justifyContent: 'space-between' }}>
-              <Text style={{ fontSize: 20 }}>Item name</Text>
-              <TextInput
-                placeholder="Item name"
-                value={itemName}
-                style={{ padding: 10, fontSize: 30 }}
-                onChangeText={
-                  (itemName) => setItemName(itemName)
-                }
-              />
-              <Text style={{ fontSize: 20 }}>Codetype: {codeType}</Text>
-              <Text style={{ fontSize: 20 }}>Codedata: {codeData}</Text>
-              <Pressable onPress={() => setScanner(!scanner)} style={{ height: '15%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignSelf: 'center' }}>
-                <Text style={{ textAlign: 'center', backgroundColor: 'white', height: 40, fontSize: 18, justifyContent: 'center' }}>Lisää laitteen viivakoodi</Text>
-                {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
-                {scanner ? (
-                  <Modal
-                    style={{ flex: 1 }}
-                    animationType="slide"
-                    transparent={true}
-                    visible={true}
-                  >
-                    <View style={{ justifyContent: 'center', flex: 6 }}>
-                      <Pressable onPress={() => setScanner(!scanner)} style={{ flex: 1, alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
-                        <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: 10, backgroundColor: 'yellow' }}>Sulje Modal Ikkuna</Text>
-                      </Pressable>
-                      <BarCodeScanner
-                        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                        style={{ flex: 5, justifyContent: 'center' }}
-                      />
-                      {scanned && <Button style={{ flex: 1 }} title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
-                    </View>
-                  </Modal>
-                ) : null}
-              </Pressable>
-              <Text style={{ fontSize: 20 }}>Image:</Text>
-              <Image source={{ uri: itemImage }} style={{ width: 200, height: 200, justifyContent: 'center', alignSelf: 'center' }} />
-              <Pressable onPress={() => setImagePicker(!imagePicker)} style={{ height: '15%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignSelf: 'center' }}>
-                <Text style={{ textAlign: 'center', backgroundColor: 'white', height: 40, fontSize: 18, justifyContent: 'center' }}>Lisää laitteen kuva</Text>
-                {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
-                {imagePicker ? (
-                  <Modal
-                    style={{ flex: 1 }}
-                    animationType="slide"
-                    transparent={true}
-                    visible={true}
-                  >
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                      <Button style={{ flex: 1 }} title="Pick an image from camera roll" onPress={pickImage} />
-                      {itemImage && <Image source={{ uri: itemImage }} style={{ width: 200, height: 200 }} />}
-                    </View>
-                  </Modal>
-                ) : null}
-              </Pressable>
-              <Pressable onPress={updateItem}>
-                <Text style={{ justifyContent: 'center', textAlign: 'center', borderWidth: 3, margin: 50, padding: 20, borderRadius: 15, color: 'green', bottom: '20%' }}>Update item</Text>
-              </Pressable>
-            </KeyboardAvoidingView>
+          <KeyboardAvoidingView
+            style={{ flex: 1, justifyContent: 'space-between' }}>
+            <Text style={styles.textheader}>Change item name</Text>
+            <TextInput
+              placeholder="Item name"
+              value={itemName}
+              style={styles.textbottom}
+              onChangeText={
+                (itemName) => setItemName(itemName)
+              }
+            />
+            <Text style={styles.textbottom}>Codetype: {codeType}</Text>
+            <Text style={styles.textbottom}>Codedata: {codeData}</Text>
+            <Pressable onPress={() => setScanner(!scanner)} style={styles.PressableStyle}>
+              <Text style={styles.PressableTextStyle}>Pick a new barcode</Text>
+              {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
+              {scanner ? (
+                <Modal
+                  style={{ flex: 1 }}
+                  animationType="slide"
+                  transparent={true}
+                  visible={true}
+                >
+                  <View style={{ justifyContent: 'center', flex: 6 }}>
+                    <Pressable onPress={() => setScanner(!scanner)} style={{ flex: 1, alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
+                      <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: 10, backgroundColor: 'yellow' }}>Sulje Modal Ikkuna</Text>
+                    </Pressable>
+                    <BarCodeScanner
+                      onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                      style={{ flex: 5, justifyContent: 'center' }}
+                    />
+                    {scanned && <Button style={{ flex: 1 }} title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+                  </View>
+                </Modal>
+              ) : null}
+            </Pressable>
+            {itemImage ? <Image source={{ uri: itemImage }} style={styles.ImageStyle} /> : null}
+            <Pressable onPress={() => setImagePicker(!imagePicker)} style={styles.PressableStyle}>
+              <Text style={styles.PressableTextStyle}>Change item image</Text>
+              {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
+              {imagePicker ? (
+                <Modal
+                  style={{ flex: 1 }}
+                  animationType="slide"
+                  transparent={true}
+                  visible={true}
+                >
+                  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    <Button style={{ flex: 1 }} title="Pick an image from camera roll" onPress={pickImage} />
+                    {itemImage && <Image source={{ uri: itemImage }} style={{ width: 200, height: 200 }} />}
+                  </View>
+                </Modal>
+              ) : null}
+            </Pressable>
+            <Pressable onPress={updateItemFunc} style={styles.PressableStyle}>
+              <Text style={styles.PressableTextStyle}>Update item</Text>
+            </Pressable>
+          </KeyboardAvoidingView>
         </View>
       </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  textheader: {
+    color: '#111',
+    fontSize: 26,
+    fontWeight: '700',
+    margin: 2,
+    fontFamily: 'RobotoMedium',
+  },
+  textbottom: {
+    color: '#111',
+    fontSize: 22,
+    fontFamily: 'AssistantMedium',
+    textDecorationLine: 'underline',
+  },
+  ImageStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    width: vw(70),
+    height: vh(20),
+    margin: '15%',
+  },
+  PressableStyle: {
+    height: '10%',
+    width: '90%',
+    backgroundColor: 'white',
+    borderWidth: 3,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignSelf: 'center'
+  }, PressableTextStyle: {
+    color: '#111',
+    fontSize: 22,
+    fontWeight: '500',
+    margin: 2,
+    fontFamily: 'RobotoMedium',
+    textAlign: 'center',
+  }
+});
 
 export default UpdateItem;

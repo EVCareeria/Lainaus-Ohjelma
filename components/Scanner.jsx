@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Button, FlatList, SafeAreaView, Modal, Alert, TouchableOpacity, Image } from 'react-native';
+import { Text, View, Button, FlatList, SafeAreaView, Modal, Alert, TouchableOpacity, Image, Pressable } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { DatabaseConnection } from './database/Database';
 import { StyleSheet } from 'react-native';
@@ -25,6 +25,11 @@ export default function Scanner({ navigation }) {
   const [loan, setLoan] = useState(0)
 
   useEffect(() => {
+    if(scanned == false) {
+      setTimeout(() => {
+        setScanned(!scanned)
+      }, 10000);
+    }
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
@@ -48,10 +53,6 @@ export default function Scanner({ navigation }) {
       );
     });
   }, [scannerItem]);
-
-  useEffect(() => {
-    console.log(flatListItems)
-  }, [flatListItems])
 
   function closeDelete() {
     setDel(!del)
@@ -93,7 +94,7 @@ export default function Scanner({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 6 }}>
-      <View style={StyleSheet.absoluteFillObject}>
+      <View style={StyleSheet.absoluteFill}>
         {scanned != true ? (
           <Modal
             style={{ flex: 4 }}
@@ -116,14 +117,14 @@ export default function Scanner({ navigation }) {
             renderItem={({ item }) => (
 
               <View style={{ flex: 5 }}>
-                <View style={{ justifyContent: 'center', alignSelf: 'center' }}>
-                  <View style={{ flexDirection: 'row', maxWidth: '50%' }}>
+                <View style={{ justifyContent: 'center', padding:'2%' }}>
+                  <View style={{ flexDirection: 'row', justifyContent:'space-between', width: vw(80) }}>
                     <Text style={styles.textheader}>Name</Text>
+                    <Text style={styles.textbottom}>{item.item_name}</Text>
                     <MaterialIcons name="update" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setUpdate(!update)} />
                     <Entypo name="trash" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setDel(!del)} />
                     <FontAwesome name="handshake-o" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setLoan(!loan)} />
                   </View>
-                  <Text style={styles.textbottom}>{item.item_name}</Text>
                   <Text style={styles.textheader}>Codetype</Text>
                   <Text style={styles.textbottom}>{item.codetype}</Text>
                   <Text style={styles.textheader}>Codedata</Text>
@@ -177,25 +178,39 @@ export default function Scanner({ navigation }) {
 const styles = StyleSheet.create({
   textheader: {
     color: '#111',
-    fontSize: 12,
+    fontSize: 26,
     fontWeight: '700',
-    margin: 3,
+    margin: 2,
+    fontFamily: 'RobotoMedium',
   },
   textbottom: {
     color: '#111',
-    fontSize: 18,
-  },
-  IoniconsStyle: {
-    left: vw(15),
-    paddingLeft: 10,
+    fontSize: 22,
+    fontFamily: 'AssistantMedium',
+    textDecorationLine: 'underline',
   },
   ImageStyle: {
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    width: vw(35),
-    height: vh(15)
+    flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    width: vw(70),
+    height: vh(20),
+    margin: '15%',
   },
-  modalStyle: {
-    flex: 8
+  PressableStyle: {
+    height: '10%',
+    width: '90%',
+    backgroundColor: 'white',
+    borderWidth: 3,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignSelf: 'center'
+  }, PressableTextStyle: {
+    color: '#111',
+    fontSize: 22,
+    fontWeight: '500',
+    margin: 2,
+    fontFamily: 'RobotoMedium',
+    textAlign: 'center',
   }
 });

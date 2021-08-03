@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { View, Pressable, Text } from 'react-native';
+import { View, Pressable, Text, StyleSheet } from 'react-native';
 import { DatabaseConnection } from './database/Database';
 import { createStackNavigator } from '@react-navigation/stack';
 import Scanner from './Scanner';
 import Item from './Item';
 import ViewItems from './Pages/ViewItems';
+import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
 const Stack = createStackNavigator();
 
@@ -31,7 +32,7 @@ const HomeScreen = ({ navigation }) => {
     db.exec([{ sql: 'PRAGMA foreign_keys = ON;', args: [] }], false, () =>
       console.log('Foreign keys turned on')
     );
-    
+
     db.transaction(function (txn) {
       txn.executeSql(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='items'",
@@ -76,25 +77,37 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={{ flex: 12, justifyContent: 'center', alignSelf: 'center' }}>
-      <Text style={{ textAlign: 'center', justifyContent: 'center', fontSize: 30, padding: '10%', textTransform:'uppercase' }}>HOME</Text>
-      <View style={{ flex: 2, justifyContent: 'center', margin: 30, padding: '15%' }}>
+    <View style={{ flex: 12, justifyContent: 'center', alignSelf: 'center', margin:'1%', backgroundColor:'#FAEBB6' }}>
+      <Text style={{ textAlign: 'center', justifyContent: 'center', fontSize: 36, padding: '10%', textTransform: 'uppercase', fontFamily: 'RobotoMedium' }}>HOME</Text>
+      <View style={styles.moduleStyle}>
         <Pressable style={{ flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Scanner')}>
-          <Text style={{ fontSize: 20, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'blue' }}>Scannaa itemi</Text>
+          <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'blue', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Scannaa itemi</Text>
         </Pressable>
       </View>
-      <View style={{ flex: 2, justifyContent: 'center', margin: 30, padding: '15%' }}>
+      <View style={styles.moduleStyle}>
         <Pressable style={{ flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Item')}>
-          <Text style={{ fontSize: 20, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'green' }}>Lisää itemi</Text>
+          <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'green', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Lisää itemi</Text>
         </Pressable>
       </View>
-      <View style={{ flex: 2, justifyContent: 'center', margin: 30, padding: '15%' }}>
+      <View style={styles.moduleStyle}>
         <Pressable style={{ flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('ViewItems')}>
-          <Text style={{ fontSize: 20, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'cyan' }}>Selaa itemeitä</Text>
+          <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'cyan', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Selaa itemeitä</Text>
         </Pressable>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  moduleStyle: {
+    flex: 2,
+    justifyContent: 'center',
+    margin: '10%',
+    padding: '15%',
+    width:vw(100),
+    alignSelf:'center',
+    
+  },
+})
 
 export default HomeScreen;
