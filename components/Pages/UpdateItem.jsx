@@ -28,7 +28,6 @@ const UpdateItem = (props) => {
   };
 
   useEffect(() => {
-    console.log(itemID);
     db.transaction((tx) => {
       tx.executeSql(
         'SELECT * FROM items where item_id = ?',
@@ -44,7 +43,6 @@ const UpdateItem = (props) => {
               res.image
             );
           } else {
-            alert('Usuário não encontrado!');
             updateAllStates('', '', '', '');
           }
         }
@@ -92,18 +90,16 @@ const UpdateItem = (props) => {
   };
 
   const updateItemFunc = () => {
-    console.log(itemName, codeType, codeData, itemImage);
-
     if (!itemName) {
       alert('You need to add item name');
       return;
     }
     if (!codeType) {
-      alert('Codetype is missing');
+      setCodeType('')
       return;
     }
     if (!codeData) {
-      alert('Codedata is missing');
+      setCodeData('')
       return;
     }
     if (!itemImage) {
@@ -118,7 +114,6 @@ const UpdateItem = (props) => {
         'UPDATE items SET item_name=?, codetype=?, codedata=?, image=? WHERE item_id=?',
         [itemName, codeType, codeData, itemImage, itemID],
         (tx, results) => {
-          console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
             Alert.alert(
               'Success',
@@ -136,7 +131,7 @@ const UpdateItem = (props) => {
       <View style={{ flex: 6, backgroundColor: 'white', justifyContent: 'center' }}>
         <View style={{ flex: 1, padding: 25 }}>
           <Pressable onPress={returnBack} style={{ alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
-            <Text style={{ textAlign: 'center', fontSize: 30, fontFamily: 'RobotoMedium', justifyContent: 'center', borderWidth: 2, borderRadius: 15, padding: 10, backgroundColor: 'yellow', opacity: 0.7 }}>Sulje Modal Ikkuna</Text>
+            <Text style={{ textAlign: 'center', fontSize: 30, fontFamily: 'RobotoMedium', justifyContent: 'center', borderWidth: 2, borderRadius: 15, padding: 10, backgroundColor: 'yellow', opacity: 0.7 }}>Close this window</Text>
           </Pressable>
           <KeyboardAvoidingView
             style={{ flex: 1, justifyContent: 'space-between' }}>
@@ -144,7 +139,7 @@ const UpdateItem = (props) => {
             <TextInput
               placeholder="Item name"
               value={itemName}
-              style={styles.textbottom}
+              style={{ color: '#111', fontSize: 24, fontFamily: 'RobotoMedium', fontWeight:'500', textAlign:'center' }}
               onChangeText={
                 (itemName) => setItemName(itemName)
               }
@@ -163,7 +158,7 @@ const UpdateItem = (props) => {
                 >
                   <View style={{ justifyContent: 'center', flex: 6 }}>
                     <Pressable onPress={() => setScanner(!scanner)} style={{ flex: 1, alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
-                      <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: 10, backgroundColor: 'yellow' }}>Sulje Modal Ikkuna</Text>
+                      <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: 10, backgroundColor: 'yellow' }}>Close this window</Text>
                     </Pressable>
                     <BarCodeScanner
                       onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -209,6 +204,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     margin: 2,
     fontFamily: 'RobotoMedium',
+    justifyContent:'center',
+    alignSelf:'center',
   },
   textbottom: {
     color: '#111',
@@ -217,17 +214,16 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   ImageStyle: {
-    flex: 1,
     justifyContent: 'center',
     alignSelf: 'center',
-    width: vw(70),
+    width: vw(50),
     height: vh(20),
-    margin: '15%',
+    margin: '5%',
   },
   PressableStyle: {
     height: '10%',
     width: '90%',
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255, 237, 211, 1)',
     borderWidth: 3,
     borderRadius: 15,
     justifyContent: 'center',

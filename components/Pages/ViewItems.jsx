@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, Text, View, SafeAreaView, StyleSheet, Pressable } from 'react-native';
+import { Text, View, SafeAreaView, StyleSheet, Pressable, Image } from 'react-native';
 import { DatabaseConnection } from '../database/Database';
-import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+import { vw, vh } from 'react-native-expo-viewport-units';
 import { Alert } from 'react-native';
 import ViewItem from './ViewItem';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -12,6 +12,7 @@ const ViewItems = ({ navigation }) => {
   const [flatListItems, setFlatListItems] = useState([]);
   const [update, setUpdate] = useState()
   const [modalDelete, setModalDelete] = useState()
+  const [loan, setLoan] = useState()
 
   useEffect(() => {
     db.transaction((tx) => {
@@ -24,11 +25,10 @@ const ViewItems = ({ navigation }) => {
             temp.push(results.rows.item(i));
           setFlatListItems(temp);
           Alert.alert('List updated')
-          console.log(temp)
         }
       );
     });
-  }, [update, modalDelete]);
+  }, [update, modalDelete, loan]);
 
 
   function updateFunction() {
@@ -39,9 +39,14 @@ const ViewItems = ({ navigation }) => {
     setModalDelete(!modalDelete)
     navigation.pop()
   }
+  function loanFunction() {
+    setLoan(!loan)
+    navigation.pop()
+  }
 
   return (
-    <SafeAreaView style={{ flex: 10, backgroundColor:'#FAEBB6' }}>
+    <SafeAreaView style={{ flex: 10 }}>
+      <Image source={require('../../assets/beach.jpg')} style={{position:'absolute', width:'100%',height:'100%'}} />
       <Pressable onPress={() => setUpdate(!update)} style={{ flex: 1, justifyContent: 'center', borderWidth: 3, borderRadius: 15, margin: 15, borderColor: 'blue', marginTop: 20, backgroundColor:'#F6F4EC' }}>
         <Text style={{ textAlign: 'center', fontSize: 30, fontFamily: 'RobotoMedium' }}>Update current list</Text>
       </Pressable>
@@ -49,7 +54,7 @@ const ViewItems = ({ navigation }) => {
         <ScrollView fadingEdgeLength={100}>
           {flatListItems.map((i) => (
             <Pressable style={{ flex: 1, margin: 6 }} key={i.item_id}>
-              <ViewItem itemID={i.item_id} itemName={i.item_name} codetype={i.codetype} codedata={i.codedata} image={i.image} setUpdateModal={updateFunction} setDeleteModal={deleteFunction} />
+              <ViewItem itemID={i.item_id} itemName={i.item_name} codetype={i.codetype} codedata={i.codedata} image={i.image} loanStatus={i.loanstatus} setUpdateModal={updateFunction} setDeleteModal={deleteFunction} setLoanModal={loanFunction} />
             </Pressable>
           ))}
         </ScrollView>

@@ -37,7 +37,6 @@ export default function Scanner({ navigation }) {
   }, []);
 
   useEffect(() => {
-    console.log('Useeffect DB Fetch')
     db.transaction((tx) => {
       tx.executeSql(
         'SELECT * FROM items WHERE codedata=?',
@@ -47,7 +46,6 @@ export default function Scanner({ navigation }) {
           for (let i = 0; i < results.rows.length; ++i)
             temp.push(results.rows.item(i));
           setFlatListItems(temp);
-          console.log(temp)
           Alert.alert('Search completed')
         }
       );
@@ -81,7 +79,6 @@ export default function Scanner({ navigation }) {
     setCodeType(type)
     setCodeData(data.toString())
     setScannerItem(!scannerItem)
-    console.log('Lisää testiä')
     setScanned(true);
   };
 
@@ -110,7 +107,7 @@ export default function Scanner({ navigation }) {
             </View>
           </Modal>
         ) : null}
-        <View style={{ flex: 5, justifyContent: 'center', alignSelf: 'center', paddingTop: vh(10), width: '100%', height: '90%' }}>
+        <View style={{ flex: 5, justifyContent: 'center', alignSelf: 'center', paddingTop: vh(10), width: '100%', height: '90%', backgroundColor:'#FAEBB6' }}>
           <FlatList
             data={flatListItems}
             keyExtractor={(item) => item.item_id.toString()}
@@ -129,7 +126,6 @@ export default function Scanner({ navigation }) {
                   <Text style={styles.textbottom}>{item.codetype}</Text>
                   <Text style={styles.textheader}>Codedata</Text>
                   <Text style={styles.textbottom}>{item.codedata}</Text>
-                  <Text style={styles.textheader}>Image</Text>
                   <Image source={{ uri: item.image }} style={styles.ImageStyle} />
                   <View>
                     {loan ? (<Modal

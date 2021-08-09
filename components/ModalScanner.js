@@ -10,7 +10,6 @@ export default function ModalScanner(props) {
 
   function closeModal() {
     props.closeModal(true)
-    console.log("Painoit nappia")
   }
 
   useEffect(() => {
@@ -24,7 +23,6 @@ export default function ModalScanner(props) {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     setDataItem({...dataItem, codeType: type, codeData: data})
-    console.log(item)
   };
 
   if (hasPermission === null) {
@@ -37,7 +35,7 @@ export default function ModalScanner(props) {
   return (
     <View style={{justifyContent: 'center', flex: 6}}>
       <Pressable onPress={() => closeModal()} style={{flex:1, alignContent:'center', backgroundColor:'white', zIndex:0}}>
-        <Text style={{alignSelf:'center', justifyContent:'center', fontSize:30, borderWidth:2, borderRadius:15, padding:15,backgroundColor:'yellow'}}>Sulje Modal Ikkuna</Text>
+        <Text style={{alignSelf:'center', justifyContent:'center', fontSize:30, borderWidth:2, borderRadius:15, padding:15,backgroundColor:'yellow'}}>Close this window</Text>
       </Pressable>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}

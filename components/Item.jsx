@@ -2,43 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, Platform, TextInput, Pressable, Alert, Modal, Button, Image } from 'react-native'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
-import { favi } from '../assets/favicon.png'
 import { DatabaseConnection } from './database/Database';
 import { vw, vh } from 'react-native-expo-viewport-units';
 
 const db = DatabaseConnection.getConnection();
 
-const initialData = [
-  {
-    itemid: 0,
-    itemname: 'testi1',
-    codetype: 32,
-    codedata: 20303038547,
-    image: favi
-  },
-  {
-    itemid: 1,
-    itemname: 'testi2',
-    codetype: 32,
-    codedata: 2222333334,
-    image: favi
-  },
-  {
-    itemid: 2,
-    itemname: 'testi3',
-    codetype: 16,
-    codedata: 49494940,
-    image: favi
-  },
-]
-
-
 const Item = ({ navigation }) => {
   //const [dataBase, setDataBase] = useState([])
-  const [itemInfo, setItemInfo] = useState(initialData)
   const [name, setName] = useState(null)
-  const [codeType, setCodeType] = useState(null)
-  const [codeData, setCodeData] = useState(null)
+  const [codeType, setCodeType] = useState(0)
+  const [codeData, setCodeData] = useState(0)
   const [scanner, setScanner] = useState(false)
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -53,13 +26,13 @@ const Item = ({ navigation }) => {
   }, []);
 
   function updateFunction() {
-    if (name && codeType && codeData && image != null) {
+    if (name && image != null) {
       addToDB()
       Alert.alert('Item ' + name + ' added to the list')
     } else {
       setName(null)
-      setCodeType(null)
-      setCodeData(null)
+      setCodeType(0)
+      setCodeData(0)
       setImage(null)
       Alert.alert('Item was not added to the list')
     }
@@ -83,8 +56,6 @@ const Item = ({ navigation }) => {
         'INSERT INTO items (item_name, codetype, codedata, image) VALUES (?,?,?,?)',
         [name, codeType, codeData, image],
         (tx, results) => {
-          console.log(name + ' ' + codeType + ' ' + codeData + ' ' + image )
-          console.log('Results', results.rowsAffected);
           setName(null)
           setCodeType(null)
           setCodeData(null)
@@ -93,13 +64,6 @@ const Item = ({ navigation }) => {
       );
     });
   }
-
-
-  const deleteItem = id => {
-    const newList = itemInfo.filter(i => i.itemid !== id);
-    setItemInfo(newList)
-  }
-
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
@@ -132,17 +96,17 @@ const Item = ({ navigation }) => {
     setTimeout(function () { setImagePicker(false) }, 2000)
   };
 
-
-
   return (
-    <View style={{ flex: 12, backgroundColor:'#FAEBB6', justifyContent: 'space-evenly', alignItems: 'center' }}>
+    <View style={{ flex: 12,  alignItems: 'center' }}>
+            <Image source={require('../assets/beach.jpg')} style={{position:'absolute', width:'100%',height:'100%'}} />
       <View style={styles.Add}>
-        <Text style={styles.textheader}>Lisää laitteen nimi</Text>
+        <Text style={styles.textheader}>Add item name</Text>
         <TextInput value={name} onChangeText={name => setName(name)} />
       </View>
-      <Pressable onPress={() => setScanner(!scanner)} style={{ height: '10%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignItems: 'center', margin: '5%', flex:1 }}>
-        <Text style={styles.textheader}>Lisää laitteen viivakoodi</Text>
-        {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
+      <Pressable onPress={() => setScanner(!scanner)} style={{ height: '10%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignItems: 'center', margin: '5%', flex: 1 }}>
+        <Text style={styles.textheader}>Add item barcode</Text>
+        {codeData ? <Text>Codedata: {codeData}</Text> : null }
+        {codeType ? <Text>Codedata: {codeType}</Text> : null }
         {scanner ? (
           <Modal
             style={{ flex: 1 }}
@@ -152,7 +116,7 @@ const Item = ({ navigation }) => {
           >
             <View style={{ justifyContent: 'center', flex: 6 }}>
               <Pressable onPress={() => setScanner(!scanner)} style={{ flex: 1, alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
-                <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: 15, backgroundColor: 'yellow' }}>Sulje Modal Ikkuna</Text>
+                <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: 15, backgroundColor: 'yellow' }}>Close this window</Text>
               </Pressable>
               <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -163,9 +127,8 @@ const Item = ({ navigation }) => {
           </Modal>
         ) : null}
       </Pressable>
-      <Pressable onPress={() => setImagePicker(!imagePicker)} style={{ height: '10%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignItems: 'center', margin: '5%', flex:1 }}>
-        <Text style={styles.textheader}>Lisää laitteen kuva</Text>
-        {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
+      <Pressable onPress={() => setImagePicker(!imagePicker)} style={{ height: '10%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignItems: 'center', margin: '5%', flex: 1 }}>
+        <Text style={styles.textheader}>Add item image</Text>
         {imagePicker ? (
           <Modal
             style={{ flex: 1 }}
@@ -181,9 +144,9 @@ const Item = ({ navigation }) => {
         ) : null}
       </Pressable>
 
-      <Pressable onPress={() => updateFunction()} style={{ justifyContent: 'center', alignSelf: 'center', borderRadius: 20, borderWidth: 1, width: '40%', height: '8%', alignItems: 'center', backgroundColor: 'white', margin: 10, flex:1 }}>
+      <Pressable onPress={() => updateFunction()} style={{ justifyContent: 'center', alignSelf: 'center', borderRadius: 20, borderWidth: 1, width: '40%', height: '8%', alignItems: 'center', backgroundColor: 'white', margin: 10, flex: 1 }}>
         <Text style={styles.textheader}>
-          Lisää itemi
+          Add item
         </Text>
       </Pressable>
     </View>
@@ -207,7 +170,7 @@ const styles = StyleSheet.create({
     marginTop: '5%',
     width: '85%',
     borderRadius: 20,
-    flex:1,
+    flex: 1,
   },
   items: {
     width: '85%',
@@ -221,7 +184,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderWidth: 2,
     backgroundColor: '#f5f5f5'
-  },textheader: {
+  }, textheader: {
     color: '#111',
     fontSize: 26,
     fontWeight: '700',

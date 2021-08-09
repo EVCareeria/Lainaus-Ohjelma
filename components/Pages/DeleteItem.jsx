@@ -19,7 +19,6 @@ const DeleteItem = (props) => {
         'DELETE FROM  items where item_id=?',
         [props.itemID],
         (tx, results) => {
-          console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
             Alert.alert(
               'Success',
@@ -39,13 +38,13 @@ const DeleteItem = (props) => {
     <SafeAreaView style={StyleSheet.absoluteFillObject}>
       <View style={{ flex: 6, flexDirection: 'column', backgroundColor: 'white', justifyContent: 'center', paddingTop: '20%', paddingBottom: '20%' }}>
         <Pressable onPress={returnBack} style={{ flex: 1, alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
-          <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: '3%', backgroundColor: 'yellow', opacity: 0.7 }}>Sulje Modal Ikkuna</Text>
+          <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: '3%', backgroundColor: 'yellow', opacity: 0.7 }}>Close this window</Text>
         </Pressable>
         <Pressable onPress={deleteItem} style={{ flex: 1, alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
-          <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: '3%', backgroundColor: 'red', opacity: 0.7 }}>Poista itemi</Text>
+          <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: '3%', backgroundColor: 'red', opacity: 0.7 }}>Delete this item</Text>
         </Pressable>
-        <View style={{ flexDirection: 'row', padding: '2%', flex: 1 }}>
-          <View style={{ flex: 2, justifyContent: 'center', alignSelf: 'center', paddingBottom: '20%', width: '50%' }}>
+        <View style={{ flexDirection: 'row', padding: '2%', flex: 3 }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'center', paddingBottom: '20%', width: '50%' }}>
             <Text style={styles.textheader}>ID: </Text>
             <Text style={styles.textbottom}>{props.itemID}</Text>
             <Text style={styles.textheader}>Name: </Text>

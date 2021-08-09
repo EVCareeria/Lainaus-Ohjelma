@@ -16,31 +16,11 @@ const ViewItem = (props) => {
   const [del, setDel] = useState(false)
   const [update, setUpdate] = useState(false)
   const [loan, setLoan] = useState(false)
-  const [currentLoans, setCurrentLoans] = useState()
-  const [now, setNow] = useState(new Date().toISOString())
-  const [weeks, setWeeks] = useState(new Date(Date.now() + (6.048e+8 * 2)).toISOString())
+  const [now, setNow] = useState(new Date(Date.now() - (6.048e+8 * 0.1)).toISOString())
+  const [week, setWeeks] = useState(new Date(Date.now() + (6.048e+8 * 1)).toISOString())
 
 
-  const { itemID, itemName, codetype, codedata, image, setUpdateModal, setDeleteModal } = props
-
-
-  useEffect(() => {
-    setCurrentLoans(0)
-    db.transaction((tx) => {
-      tx.executeSql(
-        'SELECT * FROM loantable WHERE (item_reference=(?) AND startdate) OR (item_reference=(?) AND enddate) BETWEEN (?) AND (?)',
-        [itemID, itemID, now, weeks],
-        (tx, results) => {
-          var temp = [];
-          temp.push(results.rows.length);
-          setCurrentLoans(temp)
-          console.log('setCurrentLoans ja jotain sellasta  ' + currentLoans)
-        }
-      );
-    });
-  }, [])
-
-
+  const { itemID, itemName, codetype, codedata, image, loanStatus, setUpdateModal, setDeleteModal, setLoanModal } = props
 
   function closeDelete() {
     setDel(!del)
@@ -58,30 +38,30 @@ const ViewItem = (props) => {
     setDeleteModal(true)
   }
   function setLoanModalFunc() {
-    null
+    setLoanModal(true)
   }
 
 
   return (
     <SafeAreaView style={{ flex: 6 }}>
       <View>
-        <View style={{ borderWidth: 1, padding: '2%', flex: 1, backgroundColor:'#F6F4EC' }}>
-            <View style={{ flexDirection: 'row', justifyContent:'space-between' }}>
+        <View style={{ borderWidth: 1, padding: '2%', flex: 1, backgroundColor: 'rgba(255, 237, 211, 1)'}}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.textheader}>Name</Text>
             <Text style={styles.textbottom}>{itemName}</Text>
-              <MaterialIcons name="update" size={38} color="black" onPress={() => setUpdate(!update)} />
-              <Entypo name="trash" size={38} color="black" onPress={() => setDel(!del)} />
-            </View>
-          
+            <MaterialIcons name="update" size={38} color="black" onPress={() => setUpdate(!update)} />
+            <Entypo name="trash" size={38} color="black" onPress={() => setDel(!del)} />
+          </View>
+
           <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
             <Image source={{ uri: image }} style={styles.ImageStyle} />
             <View style={{ justifyContent: 'space-evenly', flexDirection: 'column' }}>
-              <Text style={styles.textheader}>Lainaa itemi</Text>
+              <Text style={styles.textheader}>Loan item</Text>
               <FontAwesome name="handshake-o" size={38} color="black" onPress={() => setLoan(!loan)} />
             </View>
           </View>
           <View>
-            <Text style={styles.textbottom}>Loaned for next 2 weeks: {currentLoans != 0 ? currentLoans : 0} times</Text>
+            <Text style={styles.textbottom}>Loan status ?: {loanStatus == 1 ? 'Loaned' : 'Not in loan'} </Text>
           </View>
         </View>
       </View>
@@ -93,7 +73,7 @@ const ViewItem = (props) => {
           visible={true}
         >
           <View style={{ flex: 8, alignItems: 'center', justifyContent: 'center' }}>
-            <LoanItem itemID={itemID} itemname={itemName} itemImage={image} closeLoan={closeLoan} setLoanModal={setLoanModalFunc} />
+            <LoanItem itemID={itemID} itemname={itemName} itemImage={image} loanstatus={loanStatus} closeloan={closeLoan} setLoanModal={setLoanModalFunc} />
           </View>
         </Modal>)
           : null}
