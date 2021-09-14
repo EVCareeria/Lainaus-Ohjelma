@@ -25,8 +25,9 @@ const LoanItem = (props) => {
   const [showBox, setShowBox] = useState(true)
   const [orderBox, setOrderBox] = useState(true)
   const [dbAdd, setDbAdd] = useState(false)
+  const [updateStatus, setUpdateStatus] = useState(false)
 
-  const { itemID, itemname, itemImage, loanstatus, closeloan, setLoanModal } = props
+  const { itemID, itemname, itemImage, loanstatus } = props
 
   useEffect(() => {
     setInputStartDate(moment(startDate).format('DD-MM-YYYY'))
@@ -37,7 +38,7 @@ const LoanItem = (props) => {
     db.transaction((tx) => {
       tx.executeSql(
         'SELECT * FROM loantable WHERE (item_reference=(?) AND loanorder=(?) AND startdate) OR (item_reference=(?) AND loanorder=(?) AND enddate) BETWEEN (?) AND (?) ORDER BY startdate ASC',
-        [itemID, 1, itemID, 1, now, weeks],
+        [itemID, '1', itemID, '1', now, weeks],
         (tx, results) => {
           var tempA = [];
           for (let i = 0; i < results.rows.length; ++i)
@@ -47,7 +48,7 @@ const LoanItem = (props) => {
         }
       );
     });
-  }, []);
+  }, [updateStatus]);
 
   function addToDB() {
     setDbAdd(true)
@@ -69,7 +70,7 @@ const LoanItem = (props) => {
   }
   function sendToDB() {
     if (loaner && startDate && endDate != null) {
-      if (startDate >= endDate) {
+      if (startDate > endDate) {
         Alert.alert('Start date can´t be larger than end date')
       } else {
         db.transaction(function (tx) {
@@ -84,7 +85,6 @@ const LoanItem = (props) => {
           );
         });
       }
-      returnBack()
     }
     nullifyStates()
   }
@@ -93,6 +93,7 @@ const LoanItem = (props) => {
     setStartDate(null)
     setEndDate(null)
     setLoaned(0)
+    setUpdateStatus(!updateStatus)
   }
 
   function updateReturnToDB(ID) {
@@ -110,7 +111,7 @@ const LoanItem = (props) => {
     db.transaction(function (tx) {
       tx.executeSql(
         'UPDATE items SET loanstatus=(?) WHERE item_id=(?)',
-        [1, itemID],
+        ['1', itemID],
         (tx, results) => {
           Alert.alert('Item ' + props.itemname + ' Loaned')
         }
@@ -121,7 +122,7 @@ const LoanItem = (props) => {
     db.transaction(function (tx) {
       tx.executeSql(
         'UPDATE items SET loanstatus=(?) WHERE item_id=(?)',
-        [0, itemID],
+        ['0', itemID],
         (tx, results) => {
         }
       );
@@ -196,7 +197,7 @@ const LoanItem = (props) => {
 
 
   function returnBack() {
-    closeloan(false)
+    props.closeLoan(false)
   }
   return (
     <SafeAreaView style={StyleSheet.absoluteFill}>
@@ -215,7 +216,7 @@ const LoanItem = (props) => {
             <Button title="Pick Planned start date" onPress={showStartDatePicker} />
             <DateTimePickerModal
               isVisible={isStartDatePickerVisible}
-              mode="date"
+              mode="datetime"
               onConfirm={handleStartConfirm}
               onCancel={hideDatePicker}
             />
@@ -224,7 +225,7 @@ const LoanItem = (props) => {
             <Button title="Pick Planned end date" onPress={showEndDatePicker} />
             <DateTimePickerModal
               isVisible={isEndDatePickerVisible}
-              mode="date"
+              mode="datetime"
               onConfirm={handleEndConfirm}
               onCancel={hideDatePicker}
             />
@@ -256,14 +257,14 @@ const LoanItem = (props) => {
         <View style={{ flex: 10 }}>
           <FlatList
             data={flatListItems}
-            keyExtractor={item => item.loan_id}
+            keyExtractor={item => item.loan_id.toString()}
             contentContainerStyle={{
               padding:15
             }}
-            renderItem={({ item, index }) => {
+            renderItem={({ item }) => {
               return <View style={{ flexDirection:'column', padding:10, marginBottom:10,borderRadius:15, borderWidth:3, }}>
-                <Text style={styles.textheader}> Startdate: {moment(item.startdate).format('DD-MM-YYYY')}</Text>
-                <Text style={styles.textheader}> Enddate: {moment(item.enddate).format('DD-MM-YYYY')}</Text>
+                <Text style={styles.textheader}> Startdate: {moment(item.startdate).format('MMMM Do YYYY, h:mm:ss a')}</Text>
+                <Text style={styles.textheader}> Enddate: {moment(item.enddate).format('MMMM Do YYYY, h:mm:ss a')}</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={styles.textheader}> Loaner: {item.loaner}</Text>
                   {loanstatus === 1 ?

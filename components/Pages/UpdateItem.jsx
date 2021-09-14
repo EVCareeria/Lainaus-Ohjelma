@@ -30,7 +30,7 @@ const UpdateItem = (props) => {
   useEffect(() => {
     db.transaction((tx) => {
       tx.executeSql(
-        'SELECT * FROM items where item_id = ?',
+        'SELECT item_name, codetype, codedata, image FROM items where item_id = ?',
         [itemID],
         (tx, results) => {
           var len = results.rows.length;

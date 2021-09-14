@@ -137,7 +137,7 @@ const Item = ({ navigation }) => {
             visible={true}
           >
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <Button style={{ flex: 1 }} title="Pick an image from camera roll" onPress={pickImage} />
+              <Button style={{ flex: 1, width:'25%', height:'15%' }} title="Pick an image from camera roll" onPress={pickImage} />
               {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
             </View>
           </Modal>

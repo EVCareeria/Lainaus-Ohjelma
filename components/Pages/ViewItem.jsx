@@ -24,12 +24,15 @@ const ViewItem = (props) => {
 
   function closeDelete() {
     setDel(!del)
+    setDeleteModal(true)
   }
   function closeLoan() {
     setLoan(!loan)
+    setLoanModal(true)
   }
   function closeUpdate() {
     setUpdate(!update)
+    setUpdateModal(true)
   }
   function setUpdateModalFunc() {
     setUpdateModal(true)
@@ -61,7 +64,7 @@ const ViewItem = (props) => {
             </View>
           </View>
           <View>
-            <Text style={styles.textbottom}>Loan status ?: {loanStatus == 1 ? 'Loaned' : 'Not in loan'} </Text>
+            <Text style={styles.textbottom}>Loan status ?: {loanStatus == 1 ? <Text style={{color:'red'}}>Loaned</Text>  : <Text style={{color:'green'}}>Not in loan</Text> } </Text>
           </View>
         </View>
       </View>
@@ -73,7 +76,7 @@ const ViewItem = (props) => {
           visible={true}
         >
           <View style={{ flex: 8, alignItems: 'center', justifyContent: 'center' }}>
-            <LoanItem itemID={itemID} itemname={itemName} itemImage={image} loanstatus={loanStatus} closeloan={closeLoan} setLoanModal={setLoanModalFunc} />
+            <LoanItem itemID={itemID} itemname={itemName} itemImage={image} loanstatus={loanStatus} closeLoan={closeLoan} setLoanModal={setLoanModalFunc} />
           </View>
         </Modal>)
           : null}

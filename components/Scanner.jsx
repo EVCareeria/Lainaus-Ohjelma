@@ -22,7 +22,7 @@ export default function Scanner({ navigation }) {
   const [flatListItems, setFlatListItems] = useState()
   const [del, setDel] = useState(false)
   const [update, setUpdate] = useState(false)
-  const [loan, setLoan] = useState(0)
+  const [loan, setLoan] = useState(false)
 
   useEffect(() => {
     if(scanned == false) {

@@ -16,7 +16,7 @@ const DeleteItem = (props) => {
   function deleteItem() {
     db.transaction((tx) => {
       tx.executeSql(
-        'DELETE FROM  items where item_id=?',
+        'DELETE FROM items where item_id=?',
         [props.itemID],
         (tx, results) => {
           if (results.rowsAffected > 0) {
