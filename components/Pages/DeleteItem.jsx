@@ -9,6 +9,8 @@ const db = DatabaseConnection.getConnection();
 const DeleteItem = (props) => {
   const [confirm, setConfirm] = useState()
 
+  const { itemID, itemName, itemImage } = props
+  
   function returnBack() {
     props.closeDelete(false)
   }
@@ -16,8 +18,7 @@ const DeleteItem = (props) => {
   function deleteItem() {
     db.transaction((tx) => {
       tx.executeSql(
-        'DELETE FROM items where item_id=?',
-        [props.itemID],
+        'DELETE FROM items WHERE item_id = ?',[itemID],
         (tx, results) => {
           if (results.rowsAffected > 0) {
             Alert.alert(
@@ -36,7 +37,7 @@ const DeleteItem = (props) => {
 
   return (
     <SafeAreaView style={StyleSheet.absoluteFillObject}>
-      <View style={{ flex: 6, flexDirection: 'column', backgroundColor: 'white', justifyContent: 'center', paddingTop: '20%', paddingBottom: '20%' }}>
+      <View style={{display:'flex', flex: 6, flexDirection: 'column', backgroundColor: 'white', justifyContent: 'center', paddingTop: '20%', paddingBottom: '20%' }}>
         <Pressable onPress={returnBack} style={{ flex: 1, alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
           <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: '3%', backgroundColor: 'yellow', opacity: 0.7 }}>Close this window</Text>
         </Pressable>
@@ -46,12 +47,12 @@ const DeleteItem = (props) => {
         <View style={{ flexDirection: 'row', padding: '2%', flex: 3 }}>
           <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'center', paddingBottom: '20%', width: '50%' }}>
             <Text style={styles.textheader}>ID: </Text>
-            <Text style={styles.textbottom}>{props.itemID}</Text>
+            <Text style={styles.textbottom}>{itemID}</Text>
             <Text style={styles.textheader}>Name: </Text>
-            <Text style={styles.textbottom}>{props.itemName}</Text>
+            <Text style={styles.textbottom}>{itemName}</Text>
           </View>
           <View style={{ flex: 2 }}>
-            {props.itemImage ? <Image source={{ uri: props.itemImage }} style={styles.ImageStyle} /> : null}
+            {props.itemImage ? <Image source={{ uri: itemImage }} style={styles.ImageStyle} /> : null}
           </View>
         </View>
 

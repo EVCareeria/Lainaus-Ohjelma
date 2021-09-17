@@ -53,8 +53,8 @@ const Item = ({ navigation }) => {
   function addToDB() {
     db.transaction(function (tx) {
       tx.executeSql(
-        'INSERT INTO items (item_name, codetype, codedata, image) VALUES (?,?,?,?)',
-        [name, codeType, codeData, image],
+        'INSERT INTO items (item_name, codetype, codedata, image, loanstatus) VALUES (?,?,?,?,?)',
+        [name, codeType, codeData, image, '1'],
         (tx, results) => {
           setName(null)
           setCodeType(null)
@@ -97,54 +97,58 @@ const Item = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 12,  alignItems: 'center' }}>
-            <Image source={require('../assets/beach.jpg')} style={{position:'absolute', width:'100%',height:'100%'}} />
-      <View style={styles.Add}>
+    <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '80%' }}>
+      <Image source={require('../assets/beach.jpg')} style={{ position: 'absolute', width: '100%', height: '100%' }} />
+      <View style={styles.TextInput}>
         <Text style={styles.textheader}>Add item name</Text>
-        <TextInput value={name} onChangeText={name => setName(name)} />
+        <TextInput value={name} onChangeText={name => setName(name)} style={{fontSize:vw(4), fontWeight:'700', fontFamily:'AssistantMedium'}} />
       </View>
-      <Pressable onPress={() => setScanner(!scanner)} style={{ height: '10%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignItems: 'center', margin: '5%', flex: 1 }}>
+      <Pressable onPress={() => setScanner(!scanner)} style={styles.Add}>
+        <View style={{display:'flex', justifyContent:'center', flexDirection:'column'}}>
         <Text style={styles.textheader}>Add item barcode</Text>
-        {codeData ? <Text>Codedata: {codeData}</Text> : null }
-        {codeType ? <Text>Codedata: {codeType}</Text> : null }
+        {codeData ? <Text style={{fontFamily:'AssistantMedium', fontSize:vw(4)}}>Codedata: {codeData}</Text> : null}
+        {codeType ? <Text style={{fontFamily:'AssistantMedium', fontSize:vw(4)}}>Codedata: {codeType}</Text> : null}
+        </View>
         {scanner ? (
           <Modal
-            style={{ flex: 1 }}
+            style={{display:'flex'}}
             animationType="slide"
             transparent={true}
             visible={true}
           >
-            <View style={{ justifyContent: 'center', flex: 6 }}>
-              <Pressable onPress={() => setScanner(!scanner)} style={{ flex: 1, alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
-                <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: 15, backgroundColor: 'yellow' }}>Close this window</Text>
+            <View style={{display:'flex', flex: 6, justifyContent: 'center' }}>
+              <Pressable onPress={() => setScanner(!scanner)} >
+                <Text style={{ display:'flex', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: 15, backgroundColor: 'yellow', justifyContent:'center' }}>Close this window</Text>
               </Pressable>
               <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={{ flex: 5, justifyContent: 'center' }}
+                style={{display:'flex', flex: 5, justifyContent: 'center' }}
               />
-              {scanned && <Button style={{ flex: 1 }} title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+              {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
             </View>
           </Modal>
         ) : null}
       </Pressable>
-      <Pressable onPress={() => setImagePicker(!imagePicker)} style={{ height: '10%', width: '85%', backgroundColor: 'white', borderWidth: 3, borderRadius: 20, justifyContent: 'center', alignItems: 'center', margin: '5%', flex: 1 }}>
+      <Pressable onPress={() => setImagePicker(!imagePicker)} style={styles.Add}>
         <Text style={styles.textheader}>Add item image</Text>
         {imagePicker ? (
           <Modal
-            style={{ flex: 1 }}
+            style={{ display: 'flex' }}
             animationType="slide"
             transparent={true}
             visible={true}
           >
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <Button style={{ flex: 1, width:'25%', height:'15%' }} title="Pick an image from camera roll" onPress={pickImage} />
+            <View style={{display:'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Pressable style={{backgroundColor:'lightblue', width:'70%', display:'flex', borderWidth:5, borderRadius:20, justifyContent:'center'}} onPress={pickImage}>
+                <Text style={styles.textheader}>Pick an image from camera roll</Text>
+              </Pressable>
               {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
             </View>
           </Modal>
         ) : null}
       </Pressable>
 
-      <Pressable onPress={() => updateFunction()} style={{ justifyContent: 'center', alignSelf: 'center', borderRadius: 20, borderWidth: 1, width: '40%', height: '8%', alignItems: 'center', backgroundColor: 'white', margin: 10, flex: 1 }}>
+      <Pressable onPress={() => updateFunction()} style={styles.Add}>
         <Text style={styles.textheader}>
           Add item
         </Text>
@@ -163,14 +167,27 @@ const styles = StyleSheet.create({
   Add: {
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'column',
-    height: '10%',
+    flexDirection: 'row',
     backgroundColor: '#f5f5f5',
     borderWidth: 3,
     marginTop: '5%',
     width: '85%',
     borderRadius: 20,
-    flex: 1,
+    display: 'flex',
+    flex: 2
+  },
+  TextInput: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    borderWidth: 3,
+    marginTop: '5%',
+    width: '85%',
+    borderRadius: 20,
+    display: 'flex',
+    flex: 2,
+    fontSize: vw(5),
+    backgroundColor: '#f5f5f5'
   },
   items: {
     width: '85%',
@@ -186,7 +203,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5'
   }, textheader: {
     color: '#111',
-    fontSize: 26,
+    fontSize: vw(7),
     fontWeight: '700',
     margin: 2,
     fontFamily: 'RobotoMedium',
@@ -199,6 +216,7 @@ const styles = StyleSheet.create({
   },
   ImageStyle: {
     flex: 1,
+    display:'flex',
     justifyContent: 'center',
     alignSelf: 'center',
     width: vw(70),

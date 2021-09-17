@@ -90,8 +90,8 @@ export default function Scanner({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={{ flex: 6 }}>
-      <View style={StyleSheet.absoluteFill}>
+    <SafeAreaView style={{display:'flex', flex: 6 }}>
+      <View style={{display:'flex', flex:5, justifyContent:'space-between'}}>
         {scanned != true ? (
           <Modal
             style={{ flex: 4 }}
@@ -99,7 +99,7 @@ export default function Scanner({ navigation }) {
             transparent={true}
             visible={true}
           >
-            <View style={{ justifyContent: 'center', flex: 5 }}>
+            <View style={{display:'flex', justifyContent: 'center', flex: 5 }}>
               <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={{ flex: 4, justifyContent: 'center' }}
@@ -107,13 +107,13 @@ export default function Scanner({ navigation }) {
             </View>
           </Modal>
         ) : null}
-        <View style={{ flex: 5, justifyContent: 'center', alignSelf: 'center', paddingTop: vh(10), width: '100%', height: '90%', backgroundColor:'#FAEBB6' }}>
+        <View style={{display:'flex', flex: 2, justifyContent: 'center', alignSelf: 'center', paddingTop: vh(10), width: '100%', height: '90%', backgroundColor:'#FAEBB6' }}>
           <FlatList
             data={flatListItems}
             keyExtractor={(item) => item.item_id.toString()}
             renderItem={({ item }) => (
 
-              <View style={{ flex: 5 }}>
+              <View style={{ display:'flex' }}>
                 <View style={{ justifyContent: 'center', padding:'2%' }}>
                   <View style={{ flexDirection: 'row', justifyContent:'space-between', width: vw(80) }}>
                     <Text style={styles.textheader}>Name</Text>
@@ -129,32 +129,32 @@ export default function Scanner({ navigation }) {
                   <Image source={{ uri: item.image }} style={styles.ImageStyle} />
                   <View>
                     {loan ? (<Modal
-                      style={styles.modalStyle}
+                      style={{ display: 'flex' }}
                       animationType='fade'
                       transparent={true}
                       visible={true}
                     >
-                      <View style={{ flex: 8, alignItems: 'center', justifyContent: 'center' }}>
+                      <View style={{display:'flex', flex: 8, alignItems: 'center', justifyContent: 'center' }}>
                         <LoanItem itemID={item.item_id} itemname={item.item_name} itemImage={item.image} closeLoan={closeLoan} setLoanModal={setLoanModalFunc} />
                       </View>
                     </Modal>)
                       : null}
                     {del ? (<Modal
-                      style={{ flex: 3 }}
+                      style={{ display: 'flex' }}
                       animationType="slide"
                       transparent={true}
                       visible={true}>
-                      <View style={{ flex: 5, alignItems: 'center', justifyContent: 'center' }}>
+                      <View style={{display:'flex', flex: 5, alignItems: 'center', justifyContent: 'center' }}>
                         <DeleteItem itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeDelete={closeDelete} setDeleteModal={setDeleteModalFunc} />
                       </View>
                     </Modal>
                     ) : null}
                     {update ? (<Modal
-                      style={{ flex: 3 }}
+                      style={{ display: 'flex' }}
                       animationType="slide"
                       transparent={true}
                       visible={true}>
-                      <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center', paddingBottom: '15%' }}>
+                      <View style={{display:'flex', flex: 3, alignItems: 'center', justifyContent: 'center', paddingBottom: '15%' }}>
                         <UpdateUser itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeUpdate={closeUpdate} setUpdateModal={setUpdateModalFunc} />
                       </View>
                     </Modal>

@@ -9,10 +9,10 @@ import AppLoading from 'expo-app-loading';
 export default function App() {
 
   let [fontLoaded, error] = useFonts({
-    RobotoMedium: require('./assets/Fonts/Roboto-Medium.ttf'),
-    RobotoMono: require('./assets/Fonts/RobotoMono-ExtraLight.ttf'),
-    AssistantLight: require('./assets/Fonts/Assistant-Light.ttf'),
-    AssistantMedium: require('./assets/Fonts/Assistant-Medium.ttf'),
+    RobotoMedium: require('./assets/fonts/Roboto-Medium.ttf'),
+    RobotoMono: require('./assets/fonts/RobotoMono-ExtraLight.ttf'),
+    AssistantLight: require('./assets/fonts/Assistant-Light.ttf'),
+    AssistantMedium: require('./assets/fonts/Assistant-Medium.ttf'),
   })
 
   if(!fontLoaded) {

@@ -139,7 +139,7 @@ const UpdateItem = (props) => {
             <TextInput
               placeholder="Item name"
               value={itemName}
-              style={{ color: '#111', fontSize: 24, fontFamily: 'RobotoMedium', fontWeight:'500', textAlign:'center' }}
+              style={{ color: '#111', fontSize: 24, fontFamily: 'RobotoMedium', fontWeight: '500', textAlign: 'center' }}
               onChangeText={
                 (itemName) => setItemName(itemName)
               }
@@ -181,7 +181,9 @@ const UpdateItem = (props) => {
                   visible={true}
                 >
                   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <Button style={{ flex: 1 }} title="Pick an image from camera roll" onPress={pickImage} />
+                    <Pressable style={{ backgroundColor: 'lightblue', width: '70%', display: 'flex', borderWidth: 5, borderRadius: 20, justifyContent: 'center' }} onPress={pickImage}>
+                      <Text style={styles.textheader}>Pick an image from camera roll</Text>
+                    </Pressable>
                     {itemImage && <Image source={{ uri: itemImage }} style={{ width: 200, height: 200 }} />}
                   </View>
                 </Modal>
@@ -204,8 +206,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     margin: 2,
     fontFamily: 'RobotoMedium',
-    justifyContent:'center',
-    alignSelf:'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   textbottom: {
     color: '#111',

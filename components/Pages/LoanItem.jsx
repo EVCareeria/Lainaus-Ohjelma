@@ -99,30 +99,42 @@ const LoanItem = (props) => {
   function updateReturnToDB(ID) {
     db.transaction(function (tx) {
       tx.executeSql(
-        'UPDATE loantable SET loanorder=(?) WHERE loan_id=(?)',
-        [loaned, ID],
+        'DELETE FROM loantable WHERE loan_id=?',
+        [ID],
         (tx, results) => {
           returnBack()
         }
       );
     });
   };
-  function loanNow() {
-    db.transaction(function (tx) {
-      tx.executeSql(
-        'UPDATE items SET loanstatus=(?) WHERE item_id=(?)',
-        ['1', itemID],
-        (tx, results) => {
-          Alert.alert('Item ' + props.itemname + ' Loaned')
-        }
-      );
-    });
+  function loanNow(loaner) {
+    if (loanstatus == '1') {
+      db.transaction(function (tx) {
+        tx.executeSql(
+          'UPDATE items SET loanstatus=(?) WHERE item_id=(?)',
+          [loaner, itemID],
+          (tx, results) => {
+            Alert.alert('Item ' + props.itemname + ' Loaned')
+          }
+        );
+      });
+    } else {
+      return Alert.alert('Item is already loaned')
+    }
   };
   function returnLoan() {
     db.transaction(function (tx) {
       tx.executeSql(
         'UPDATE items SET loanstatus=(?) WHERE item_id=(?)',
-        ['0', itemID],
+        ['1', itemID],
+        (tx, results) => {
+        }
+      );
+    });
+    db.transaction(function (tx) {
+      tx.executeSql(
+        'UPDATE loantable SET loanstatus=(?) WHERE item_id=(?)',
+        ['1', itemID],
         (tx, results) => {
         }
       );
@@ -252,27 +264,27 @@ const LoanItem = (props) => {
         </View>
 
         <Pressable onPress={() => addToDB()} style={{ flex: 1, justifyContent: 'center' }}>
-          <Text style={{ fontSize: 26, textAlign: 'center', borderWidth: 3, backgroundColor: 'rgba(238, 216, 182, 0.2)', }}>Set loan order</Text>
+          <Text style={{display:'flex', fontSize: 26, textAlign: 'center', borderWidth: 3, backgroundColor: 'rgba(238, 216, 182, 0.2)', }}>Set loan order</Text>
         </Pressable>
         <View style={{ flex: 10 }}>
           <FlatList
             data={flatListItems}
             keyExtractor={item => item.loan_id.toString()}
             contentContainerStyle={{
-              padding:15
+              padding: 15
             }}
             renderItem={({ item }) => {
-              return <View style={{ flexDirection:'column', padding:10, marginBottom:10,borderRadius:15, borderWidth:3, }}>
+              return <View style={{ flexDirection: 'column', padding: 10, marginBottom: 10, borderRadius: 15, borderWidth: 3, }}>
                 <Text style={styles.textheader}> Startdate: {moment(item.startdate).format('MMMM Do YYYY, h:mm:ss a')}</Text>
                 <Text style={styles.textheader}> Enddate: {moment(item.enddate).format('MMMM Do YYYY, h:mm:ss a')}</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={styles.textheader}> Loaner: {item.loaner}</Text>
-                  {loanstatus === 1 ?
+                  {loanstatus == item.loaner ?
                     <Pressable onPress={() => showConfirmDialog(item.loan_id)}>
-                      <Text style={{ textAlign: 'right', fontSize: 24, margin: 2 }}>Return device</Text>
+                      <Text style={{ textAlign: 'right', fontSize: 24, margin: 2, color: 'red' }}>Return device</Text>
                     </Pressable>
-                    : <Pressable onPress={() => loanNow()}>
-                      <Text style={{ textAlign: 'right', fontSize: 24, margin: 2 }}>Loan device</Text>
+                    : <Pressable onPress={() => loanNow(item.loaner)}>
+                      <Text style={{ textAlign: 'right', fontSize: 24, margin: 2, color: 'green' }}>Loan device</Text>
                     </Pressable>}
                 </View>
               </View>

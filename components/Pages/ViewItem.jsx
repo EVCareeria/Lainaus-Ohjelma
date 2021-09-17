@@ -46,25 +46,20 @@ const ViewItem = (props) => {
 
 
   return (
-    <SafeAreaView style={{ flex: 6 }}>
+    <SafeAreaView style={{ display: 'flex', flex: 6 }}>
       <View>
-        <View style={{ borderWidth: 1, padding: '2%', flex: 1, backgroundColor: 'rgba(255, 237, 211, 1)'}}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ borderWidth: 1, padding: '1%', display: 'flex', flex: 1, backgroundColor: 'rgba(255, 237, 211, 1)' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
             <Text style={styles.textheader}>Name</Text>
             <Text style={styles.textbottom}>{itemName}</Text>
             <MaterialIcons name="update" size={38} color="black" onPress={() => setUpdate(!update)} />
             <Entypo name="trash" size={38} color="black" onPress={() => setDel(!del)} />
+            <FontAwesome name="handshake-o" size={38} color="black" onPress={() => setLoan(!loan)} />
           </View>
-
-          <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-            <Image source={{ uri: image }} style={styles.ImageStyle} />
-            <View style={{ justifyContent: 'space-evenly', flexDirection: 'column' }}>
-              <Text style={styles.textheader}>Loan item</Text>
-              <FontAwesome name="handshake-o" size={38} color="black" onPress={() => setLoan(!loan)} />
-            </View>
-          </View>
-          <View>
-            <Text style={styles.textbottom}>Loan status ?: {loanStatus == 1 ? <Text style={{color:'red'}}>Loaned</Text>  : <Text style={{color:'green'}}>Not in loan</Text> } </Text>
+          <View style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+          <Image source={{ uri: image }} style={styles.ImageStyle} />
+          <Text style={styles.textbottom}>Loan status ?: {loanStatus != '1' ? <Text style={{ color: 'red' }}>Loaned</Text> : <Text style={{ color: 'green' }}>Not in loan</Text>} </Text>
+          
           </View>
         </View>
       </View>
@@ -127,7 +122,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     width: vw(30),
     height: vh(10),
-    margin: '5%',
+    margin: '1%',
   },
   modalStyle: {
     flex: 8

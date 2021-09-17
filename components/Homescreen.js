@@ -42,7 +42,7 @@ const HomeScreen = ({ navigation }) => {
           if (res.rows.length == 0) {
             txn.executeSql('DROP TABLE IF EXISTS items', []);
             txn.executeSql(
-              'CREATE TABLE IF NOT EXISTS items(item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name VARCHAR(50), codetype VARCHAR(25), codedata VARCHAR(255), image VARCHAR(255), loanstatus INTEGER)',
+              'CREATE TABLE IF NOT EXISTS items(item_id INTEGER PRIMARY KEY AUTOINCREMENT, item_name VARCHAR(50), codetype VARCHAR(25), codedata VARCHAR(255), image VARCHAR(255), loanstatus VARCHAR(25))',
               []
             );
           }
@@ -81,17 +81,17 @@ const HomeScreen = ({ navigation }) => {
       <Image source={require('../assets/BGimg.jpg')} style={{position:'absolute', width:'100%',height:'100%'}} />
       <Text style={{ textAlign: 'center', justifyContent: 'center', fontSize: 36, padding: '10%', textTransform: 'uppercase', fontFamily: 'RobotoMedium' }}>HOME</Text>
       <View style={styles.moduleStyle}>
-        <Pressable style={{ flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Scanner')}>
+        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Scanner')}>
           <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'blue', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Scanner search</Text>
         </Pressable>
       </View>
       <View style={styles.moduleStyle}>
-        <Pressable style={{ flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Item')}>
+        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Item')}>
           <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'green', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Add item</Text>
         </Pressable>
       </View>
       <View style={styles.moduleStyle}>
-        <Pressable style={{ flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('ViewItems')}>
+        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('ViewItems')}>
           <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'cyan', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Browse items</Text>
         </Pressable>
       </View>
@@ -101,6 +101,7 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   moduleStyle: {
+    display:'flex',
     flex: 2,
     justifyContent: 'center',
     margin: '10%',
