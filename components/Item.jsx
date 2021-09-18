@@ -116,9 +116,9 @@ const Item = ({ navigation }) => {
             transparent={true}
             visible={true}
           >
-            <View style={{display:'flex', flex: 6, justifyContent: 'center' }}>
+            <View style={{display:'flex', flex: 6, justifyContent: 'center', height:'100%' }}>
               <Pressable onPress={() => setScanner(!scanner)} >
-                <Text style={{ display:'flex', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: 15, backgroundColor: 'yellow', justifyContent:'center' }}>Close this window</Text>
+                <Text style={{ display:'flex', fontSize: 30, borderWidth: 2,textAlign:'center', borderRadius: 15, padding: 15, backgroundColor: 'yellow', justifyContent:'center' }}>Close this window</Text>
               </Pressable>
               <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -147,12 +147,14 @@ const Item = ({ navigation }) => {
           </Modal>
         ) : null}
       </Pressable>
-
-      <Pressable onPress={() => updateFunction()} style={styles.Add}>
+          <View style={styles.Add}>
+          <Pressable onPress={() => updateFunction()} style={({pressed}) =>[{borderWidth: pressed ? 5 : 0}]}  >
         <Text style={styles.textheader}>
           Add item
         </Text>
       </Pressable>
+          </View>
+      
     </View>
   )
 
@@ -207,6 +209,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     margin: 2,
     fontFamily: 'RobotoMedium',
+    textAlign:'center'
   },
   textbottom: {
     color: '#111',

@@ -49,9 +49,6 @@ const HomeScreen = ({ navigation }) => {
         }
       );
     });
-  }, []);
-
-  useEffect(() => {
     //Käytetään Tietokanta loantable nollaukseen / Used to empty loantable from information
 
     /* db.transaction(function (txn) {
@@ -81,17 +78,17 @@ const HomeScreen = ({ navigation }) => {
       <Image source={require('../assets/BGimg.jpg')} style={{position:'absolute', width:'100%',height:'100%'}} />
       <Text style={{ textAlign: 'center', justifyContent: 'center', fontSize: 36, padding: '10%', textTransform: 'uppercase', fontFamily: 'RobotoMedium' }}>HOME</Text>
       <View style={styles.moduleStyle}>
-        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Scanner')}>
+        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Scanner')} style={({pressed}) =>[{backgroundColor: pressed ? 'red' : 'transparent'}]}>
           <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'blue', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Scanner search</Text>
         </Pressable>
       </View>
       <View style={styles.moduleStyle}>
-        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Item')}>
+        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Item')} style={({pressed}) =>[{backgroundColor: pressed ? 'red' : 'transparent'}]} >
           <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'green', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Add item</Text>
         </Pressable>
       </View>
       <View style={styles.moduleStyle}>
-        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('ViewItems')}>
+        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('ViewItems')} style={({pressed}) =>[{backgroundColor: pressed ? 'red' : 'transparent'}]} >
           <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'cyan', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Browse items</Text>
         </Pressable>
       </View>

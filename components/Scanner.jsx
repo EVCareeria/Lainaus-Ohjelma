@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Button, FlatList, SafeAreaView, Modal, Alert, TouchableOpacity, Image, Pressable } from 'react-native';
+import { Text, View, Button, FlatList, SafeAreaView, Modal, Alert, ScrollView, Image, Pressable } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { DatabaseConnection } from './database/Database';
 import { StyleSheet } from 'react-native';
 import { vw, vh } from 'react-native-expo-viewport-units';
-import { FontAwesome } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import DeleteItem from './Pages/DeleteItem';
-import UpdateUser from './Pages/UpdateItem';
-import LoanItem from './Pages/LoanItem';
+import ViewItem from './Pages/ViewItem';
 
 const db = DatabaseConnection.getConnection();
 
@@ -19,16 +14,16 @@ export default function Scanner({ navigation }) {
   const [codeType, setCodeType] = useState(null)
   const [codeData, setCodeData] = useState(null)
   const [scannerItem, setScannerItem] = useState()
-  const [flatListItems, setFlatListItems] = useState()
-  const [del, setDel] = useState(false)
-  const [update, setUpdate] = useState(false)
-  const [loan, setLoan] = useState(false)
+  const [flatListItems, setFlatListItems] = useState([]);
+  const [update, setUpdate] = useState()
+  const [modalDelete, setModalDelete] = useState()
+  const [loan, setLoan] = useState()
 
   useEffect(() => {
-    if(scanned == false) {
+    if (scanned == false) {
       setTimeout(() => {
         setScanned(!scanned)
-      }, 10000);
+      }, 12000);
     }
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -50,29 +45,7 @@ export default function Scanner({ navigation }) {
         }
       );
     });
-  }, [scannerItem]);
-
-  function closeDelete() {
-    setDel(!del)
-    navigation.pop()
-  }
-  function closeLoan() {
-    setLoan(!loan)
-    navigation.pop()
-  }
-  function closeUpdate() {
-    setUpdate(!update)
-    navigation.pop()
-  }
-  function setUpdateModalFunc() {
-    setUpdateModal(true)
-  }
-  function setLoanModalFunc() {
-    setLoanModal(true)
-  }
-  function setDeleteModalFunc() {
-    setDeleteModal(true)
-  }
+  }, [scannerItem, update]);
 
   const handleBarCodeScanned = ({ type, data }) => {
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
@@ -89,9 +62,18 @@ export default function Scanner({ navigation }) {
     return <Text>No access to camera</Text>;
   }
 
+  function updateFunction() {
+    setUpdate(!update)
+  }
+  function deleteFunction() {
+    setModalDelete(!modalDelete)
+  }
+  function loanFunction() {
+    setLoan(!loan)
+  }
+
   return (
-    <SafeAreaView style={{display:'flex', flex: 6 }}>
-      <View style={{display:'flex', flex:5, justifyContent:'space-between'}}>
+    <SafeAreaView style={{ display: 'flex', flex: 6 }}>
         {scanned != true ? (
           <Modal
             style={{ flex: 4 }}
@@ -99,7 +81,7 @@ export default function Scanner({ navigation }) {
             transparent={true}
             visible={true}
           >
-            <View style={{display:'flex', justifyContent: 'center', flex: 5 }}>
+            <View style={{ display: 'flex', justifyContent: 'center', flex: 5 }}>
               <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={{ flex: 4, justifyContent: 'center' }}
@@ -107,65 +89,17 @@ export default function Scanner({ navigation }) {
             </View>
           </Modal>
         ) : null}
-        <View style={{display:'flex', flex: 2, justifyContent: 'center', alignSelf: 'center', paddingTop: vh(10), width: '100%', height: '90%', backgroundColor:'#FAEBB6' }}>
-          <FlatList
-            data={flatListItems}
-            keyExtractor={(item) => item.item_id.toString()}
-            renderItem={({ item }) => (
-
-              <View style={{ display:'flex' }}>
-                <View style={{ justifyContent: 'center', padding:'2%' }}>
-                  <View style={{ flexDirection: 'row', justifyContent:'space-between', width: vw(80) }}>
-                    <Text style={styles.textheader}>Name</Text>
-                    <Text style={styles.textbottom}>{item.item_name}</Text>
-                    <MaterialIcons name="update" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setUpdate(!update)} />
-                    <Entypo name="trash" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setDel(!del)} />
-                    <FontAwesome name="handshake-o" size={34} color="black" style={styles.IoniconsStyle} onPress={() => setLoan(!loan)} />
-                  </View>
-                  <Text style={styles.textheader}>Codetype</Text>
-                  <Text style={styles.textbottom}>{item.codetype}</Text>
-                  <Text style={styles.textheader}>Codedata</Text>
-                  <Text style={styles.textbottom}>{item.codedata}</Text>
-                  <Image source={{ uri: item.image }} style={styles.ImageStyle} />
-                  <View>
-                    {loan ? (<Modal
-                      style={{ display: 'flex' }}
-                      animationType='fade'
-                      transparent={true}
-                      visible={true}
-                    >
-                      <View style={{display:'flex', flex: 8, alignItems: 'center', justifyContent: 'center' }}>
-                        <LoanItem itemID={item.item_id} itemname={item.item_name} itemImage={item.image} closeLoan={closeLoan} setLoanModal={setLoanModalFunc} />
-                      </View>
-                    </Modal>)
-                      : null}
-                    {del ? (<Modal
-                      style={{ display: 'flex' }}
-                      animationType="slide"
-                      transparent={true}
-                      visible={true}>
-                      <View style={{display:'flex', flex: 5, alignItems: 'center', justifyContent: 'center' }}>
-                        <DeleteItem itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeDelete={closeDelete} setDeleteModal={setDeleteModalFunc} />
-                      </View>
-                    </Modal>
-                    ) : null}
-                    {update ? (<Modal
-                      style={{ display: 'flex' }}
-                      animationType="slide"
-                      transparent={true}
-                      visible={true}>
-                      <View style={{display:'flex', flex: 3, alignItems: 'center', justifyContent: 'center', paddingBottom: '15%' }}>
-                        <UpdateUser itemID={item.item_id} itemName={item.item_name} itemImage={item.image} closeUpdate={closeUpdate} setUpdateModal={setUpdateModalFunc} />
-                      </View>
-                    </Modal>
-                    ) : null}
-                  </View>
-                </View>
-              </View>
-            )}
-          />
-        </View>
-
+      <Pressable onPress={() => setUpdate(!update)} style={{ flex: 1, justifyContent: 'center', borderWidth: 3, borderRadius: 15, margin: 15, borderColor: 'blue', marginTop: 20, backgroundColor:'#F6F4EC' }}>
+        <Text style={{ textAlign: 'center', fontSize: 30, fontFamily: 'RobotoMedium' }}>Update current list</Text>
+      </Pressable>
+      <View style={{display:'flex', flex: 11 }}>
+        <ScrollView fadingEdgeLength={100}>
+          {flatListItems.map((i) => (
+            <Pressable style={{display:'flex', flex: 2, margin: 3 }} key={i.item_id}>
+              <ViewItem itemID={i.item_id} itemName={i.item_name} codetype={i.codetype} codedata={i.codedata} image={i.image} loanStatus={i.loanstatus} setUpdateModal={updateFunction} setDeleteModal={deleteFunction} setLoanModal={loanFunction} />
+            </Pressable>
+          ))}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );

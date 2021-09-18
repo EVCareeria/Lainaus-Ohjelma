@@ -44,9 +44,11 @@ const ViewItems = ({ navigation }) => {
   return (
     <SafeAreaView style={{display:'flex', flex: 10, flexDirection:'column' }}>
       <Image source={require('../../assets/beach.jpg')} style={{position:'absolute', width:'100%',height:'100%'}} />
-      <Pressable onPress={() => setUpdate(!update)} style={{ flex: 1, justifyContent: 'center', borderWidth: 3, borderRadius: 15, margin: 15, borderColor: 'blue', marginTop: 20, backgroundColor:'#F6F4EC' }}>
+      <View style={{ flex: 1, justifyContent: 'center', borderWidth: 3, borderRadius: 15, margin: 15, borderColor: 'blue', marginTop: 20, backgroundColor:'#F6F4EC' }}>
+      <Pressable onPress={() => setUpdate(!update)} style={({pressed}) =>[{borderWidth: pressed ? 5 : 0}]} >
         <Text style={{ textAlign: 'center', fontSize: 30, fontFamily: 'RobotoMedium' }}>Update current list</Text>
       </Pressable>
+      </View>
       <View style={{display:'flex', flex: 11 }}>
         <ScrollView fadingEdgeLength={100}>
           {flatListItems.map((i) => (

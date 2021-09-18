@@ -59,7 +59,6 @@ const ViewItem = (props) => {
           <View style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
           <Image source={{ uri: image }} style={styles.ImageStyle} />
           <Text style={styles.textbottom}>Loan status ?: {loanStatus != '1' ? <Text style={{ color: 'red' }}>Loaned</Text> : <Text style={{ color: 'green' }}>Not in loan</Text>} </Text>
-          
           </View>
         </View>
       </View>
