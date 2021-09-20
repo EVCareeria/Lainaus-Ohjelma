@@ -45,7 +45,7 @@ export default function Scanner({ navigation }) {
         }
       );
     });
-  }, [scannerItem, update]);
+  }, [scannerItem, update, loan, modalDelete]);
 
   const handleBarCodeScanned = ({ type, data }) => {
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);

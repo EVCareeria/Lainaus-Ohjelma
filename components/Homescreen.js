@@ -23,14 +23,27 @@ export function ScannerStack() {
 
 const HomeScreen = ({ navigation }) => {
 
-  useEffect(() => {
-    //Käytetään Tietokanta items nollaukseen / Used to empty items table from information
-
-    /* db.transaction(function (txn) {
+  useEffect(()=> {
+     //Käytetään Tietokanta items nollaukseen / Used to empty items table from information
+     
+   /*  db.transaction(function (txn) {
       txn.executeSql('drop table items')
     }) */
+    
+     //Käytetään Tietokanta loantable nollaukseen / Used to empty loantable from information
 
-    db.exec([{ sql: 'PRAGMA foreign_keys = ON;', args: [] }], false, () =>
+    /* db.transaction(function (txn) {
+      txn.executeSql('drop table loantable')
+    }) */
+  }, [])
+
+  useEffect(() => {
+    let updateTable = true;
+   
+
+    if(updateTable == true) {
+
+      db.exec([{ sql: 'PRAGMA foreign_keys = ON;', args: [] }], false, () =>
       console.log('Foreign keys turned on')
     );
 
@@ -49,11 +62,6 @@ const HomeScreen = ({ navigation }) => {
         }
       );
     });
-    //Käytetään Tietokanta loantable nollaukseen / Used to empty loantable from information
-
-    /* db.transaction(function (txn) {
-      txn.executeSql('drop table loantable')
-    }) */
 
     db.transaction(function (txn) {
       txn.executeSql(
@@ -70,6 +78,8 @@ const HomeScreen = ({ navigation }) => {
         }
       );
     });
+    updateTable = false
+    } 
   }, []);
 
 
