@@ -98,38 +98,38 @@ const Item = ({ navigation }) => {
 
   return (
     <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '80%' }}>
-      <Image source={require('../assets/beach.jpg')} style={{ position: 'absolute', width: '100%', height: '100%' }} />
+      <Image source={require('../assets/beach.jpg')} style={{ position: 'absolute', width: '100%', height: '150%' }} />
       <View style={styles.TextInput}>
         <Text style={styles.textheader}>Add item name</Text>
-        <TextInput value={name} onChangeText={name => setName(name)} style={{fontSize:vw(4), fontWeight:'700', fontFamily:'AssistantMedium'}} />
+        <TextInput value={name} onChangeText={name => setName(name)} style={{ fontSize: vw(4), fontWeight: '700', fontFamily: 'AssistantMedium', height: 50 }} />
       </View>
-      <Pressable onPress={() => setScanner(!scanner)} style={styles.Add}>
-        <View style={{display:'flex', justifyContent:'center', flexDirection:'column'}}>
-        <Text style={styles.textheader}>Add item barcode</Text>
-        {codeData ? <Text style={{fontFamily:'AssistantMedium', fontSize:vw(4)}}>Codedata: {codeData}</Text> : null}
-        {codeType ? <Text style={{fontFamily:'AssistantMedium', fontSize:vw(4)}}>Codedata: {codeType}</Text> : null}
+      <Pressable onPress={() => setScanner(!scanner)} style={({pressed}) =>[{backgroundColor: pressed ? '#4d9484' : 'white'}, styles.Add ]} >
+        <View style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+          <Text style={styles.textheader}>Add item barcode</Text>
+          {codeData ? <Text style={{ fontFamily: 'AssistantMedium', fontSize: vw(4) }}>Codedata: {codeData}</Text> : null}
+          {codeType ? <Text style={{ fontFamily: 'AssistantMedium', fontSize: vw(4) }}>Codedata: {codeType}</Text> : null}
         </View>
         {scanner ? (
           <Modal
-            style={{display:'flex'}}
+            style={{ display: 'flex' }}
             animationType="slide"
             transparent={true}
             visible={true}
           >
-            <View style={{display:'flex', flex: 6, justifyContent: 'center', height:'100%' }}>
+            <View style={{ display: 'flex', flex: 6, justifyContent: 'center', height: '100%' }}>
               <Pressable onPress={() => setScanner(!scanner)} >
-                <Text style={{ display:'flex', fontSize: 30, borderWidth: 2,textAlign:'center', borderRadius: 15, padding: 15, backgroundColor: 'yellow', justifyContent:'center' }}>Close this window</Text>
+                <Text style={{ display: 'flex', fontSize: 30, borderWidth: 2, textAlign: 'center', borderRadius: 15, padding: 15, backgroundColor: 'yellow', justifyContent: 'center' }}>Close this window</Text>
               </Pressable>
               <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={{display:'flex', flex: 5, justifyContent: 'center' }}
+                style={{ display: 'flex', flex: 5, justifyContent: 'center' }}
               />
               {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
             </View>
           </Modal>
         ) : null}
       </Pressable>
-      <Pressable onPress={() => setImagePicker(!imagePicker)} style={styles.Add}>
+      <Pressable onPress={() => setImagePicker(!imagePicker)} style={({pressed}) =>[{backgroundColor: pressed ? '#4d9484' : 'white'}, styles.Add ]}>
         <Text style={styles.textheader}>Add item image</Text>
         {imagePicker ? (
           <Modal
@@ -138,8 +138,8 @@ const Item = ({ navigation }) => {
             transparent={true}
             visible={true}
           >
-            <View style={{display:'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <Pressable style={{backgroundColor:'lightblue', width:'70%', display:'flex', borderWidth:5, borderRadius:20, justifyContent:'center'}} onPress={pickImage}>
+            <View style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Pressable style={{ backgroundColor: 'lightblue', width: '70%', display: 'flex', borderWidth: 5, borderRadius: 20, justifyContent: 'center' }} onPress={pickImage}>
                 <Text style={styles.textheader}>Pick an image from camera roll</Text>
               </Pressable>
               {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
@@ -147,14 +147,12 @@ const Item = ({ navigation }) => {
           </Modal>
         ) : null}
       </Pressable>
-          <View style={styles.Add}>
-          <Pressable onPress={() => updateFunction()} style={({pressed}) =>[{borderWidth: pressed ? 5 : 0}]}  >
-        <Text style={styles.textheader}>
-          Add item
-        </Text>
-      </Pressable>
-          </View>
-      
+        <Pressable onPress={() => updateFunction()} style={({pressed}) =>[{backgroundColor: pressed ? '#4d9484' : 'white'}, styles.Add ]}  >
+          <Text style={styles.textheader}>
+            Add item
+          </Text>
+        </Pressable>
+
     </View>
   )
 
@@ -170,13 +168,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: '#f5f5f5',
     borderWidth: 3,
     marginTop: '5%',
+    height: '30%',
     width: '85%',
     borderRadius: 20,
     display: 'flex',
-    flex: 2
   },
   TextInput: {
     justifyContent: 'center',
@@ -184,10 +181,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     borderWidth: 3,
     marginTop: '5%',
-    width: '85%',
+    width: '80%',
     borderRadius: 20,
     display: 'flex',
-    flex: 2,
     fontSize: vw(5),
     backgroundColor: '#f5f5f5'
   },
@@ -209,7 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     margin: 2,
     fontFamily: 'RobotoMedium',
-    textAlign:'center'
+    textAlign: 'center'
   },
   textbottom: {
     color: '#111',
@@ -219,7 +215,7 @@ const styles = StyleSheet.create({
   },
   ImageStyle: {
     flex: 1,
-    display:'flex',
+    display: 'flex',
     justifyContent: 'center',
     alignSelf: 'center',
     width: vw(70),
@@ -242,6 +238,10 @@ const styles = StyleSheet.create({
     fontFamily: 'RobotoMedium',
     textAlign: 'center',
   },
+  PressablePressed:{
+    borderRadius:15,
+    borderColor:'green',
+  }
 })
 
 export default Item;

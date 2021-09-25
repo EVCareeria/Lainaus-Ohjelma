@@ -23,19 +23,19 @@ export function ScannerStack() {
 
 const HomeScreen = ({ navigation }) => {
 
-  useEffect(()=> {
+ /*  useEffect(()=> {
      //Käytetään Tietokanta items nollaukseen / Used to empty items table from information
      
-   /*  db.transaction(function (txn) {
+    db.transaction(function (txn) {
       txn.executeSql('drop table items')
-    }) */
+    })
     
      //Käytetään Tietokanta loantable nollaukseen / Used to empty loantable from information
 
-    /* db.transaction(function (txn) {
+    db.transaction(function (txn) {
       txn.executeSql('drop table loantable')
-    }) */
-  }, [])
+    })
+  }, []) */
 
   useEffect(() => {
     let updateTable = true;
@@ -84,22 +84,22 @@ const HomeScreen = ({ navigation }) => {
 
 
   return (
-    <View style={{ flex: 6, justifyContent: 'center' }}>
-      <Image source={require('../assets/BGimg.jpg')} style={{position:'absolute', width:'100%',height:'100%'}} />
-      <Text style={{ textAlign: 'center', justifyContent: 'center', fontSize: 36, padding: '10%', textTransform: 'uppercase', fontFamily: 'RobotoMedium' }}>HOME</Text>
+    <View style={{display:'flex', justifyContent: 'space-evenly',flexDirection:'column', minHeight:'100%', paddingBottom:'20%'}}>
+      <Image source={require('../assets/BGimg.jpg')} style={{position:'absolute', width:'100%',height:'140%'}} />
+      <Text style={{ textAlign: 'center', justifyContent: 'center', fontSize: vh(6), padding: '5%', textTransform: 'uppercase', fontFamily: 'RobotoMedium', color:'#4475f2', textShadowRadius:10, textShadowColor:'white' }}>HOME</Text>
       <View style={styles.moduleStyle}>
-        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Scanner')} style={({pressed}) =>[{backgroundColor: pressed ? 'red' : 'transparent'}]}>
-          <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'blue', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Scanner search</Text>
+        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Scanner')} style={({pressed}) =>[{backgroundColor: pressed ? '#2b758a' : 'white'}, styles.PressableOn ]}>
+          <Text style={{ fontSize: vh(4), padding: '10%', borderColor: 'blue', fontFamily: 'RobotoMedium', textAlign:'center' }}>Scanner search</Text>
         </Pressable>
       </View>
       <View style={styles.moduleStyle}>
-        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Item')} style={({pressed}) =>[{backgroundColor: pressed ? 'red' : 'transparent'}]} >
-          <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'green', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Add item</Text>
+        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('Item')} style={({pressed}) =>[{backgroundColor: pressed ? '#2b758a' : 'white'}, styles.PressableOn]} >
+          <Text style={{ fontSize: vh(4), padding: '10%', borderColor: 'green', fontFamily: 'RobotoMedium', textAlign:'center' }}>Add item</Text>
         </Pressable>
       </View>
       <View style={styles.moduleStyle}>
-        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('ViewItems')} style={({pressed}) =>[{backgroundColor: pressed ? 'red' : 'transparent'}]} >
-          <Text style={{ fontSize: 26, borderWidth: 3, borderRadius: 15, padding: '20%', borderColor: 'cyan', fontFamily: 'RobotoMedium', textAlign:'center',backgroundColor:'#F6F4EC' }}>Browse items</Text>
+        <Pressable style={{display:'flex', flex: 1, justifyContent: 'center' }} onPress={() => navigation.navigate('ViewItems')} style={({pressed}) =>[{backgroundColor: pressed ? '#2b758a' : 'white'}, styles.PressableOn]} >
+          <Text style={{ fontSize: vh(4), padding: '10%', borderColor: 'cyan', fontFamily: 'RobotoMedium', textAlign:'center'}}>Browse items</Text>
         </Pressable>
       </View>
     </View>
@@ -109,13 +109,15 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   moduleStyle: {
     display:'flex',
-    flex: 2,
+    flex: 1,
     justifyContent: 'center',
-    margin: '10%',
-    padding: '15%',
-    width:vw(100),
+    width:vw(80),
+    padding:'5%',
     alignSelf:'center',
-    
+  },
+  PressableOn:{
+    borderWidth:3,
+    borderRadius:15,
   },
 })
 

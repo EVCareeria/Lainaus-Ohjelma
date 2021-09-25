@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "lainaus-ohjelma",
-    "slug": "lainaus-ohjelma",
-    "version": "1.0.0",
+    "name": "scanner-loaner-ev",
+    "slug": "scanner-loaner-ev",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -20,10 +20,13 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": [ "CAMERA", "WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE", "CAMERA_ROLL" ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.evscanner",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
