@@ -2,6 +2,8 @@ import React, { } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { ScannerStack } from './components/Homescreen';
+import Guide from './components/Guide';
+
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 
@@ -26,11 +28,12 @@ export default function App() {
         <Tab.Navigator
           tabBarOptions={{
             showLabel: true,
-            inactiveBackgroundColor: 'white',
-            activeTintColor: '#4adebe',
-            labelStyle: { fontSize: 24 }
+            inactiveBackgroundColor: 'grey',
+            activeTintColor: 'green',
+            labelStyle: { fontSize: 28 }
           }}
         >
+          <Tab.Screen name="Guide" component={Guide} />
           <Tab.Screen name="Home" component={ScannerStack} />
         </Tab.Navigator>
       </NavigationContainer>
