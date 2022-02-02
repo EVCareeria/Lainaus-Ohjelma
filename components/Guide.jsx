@@ -1,5 +1,6 @@
 import React from "react";
 import { SafeAreaView, View, Text, StyleSheet, Image } from "react-native";
+import { vw, vh } from "react-native-expo-viewport-units";
 import { ScrollView } from "react-native-gesture-handler";
 
 
@@ -63,13 +64,13 @@ const styles = StyleSheet.create({
         alignSelf:'center'
     },
     Title: {
-        fontSize: 38,
+        fontSize: vh(2),
         color:'green',
         textTransform: "uppercase",
         fontFamily: 'RobotoMedium',
     },
     PartTitle: {
-        fontSize: 26,
+        fontSize: 15 + vh(3),
         textTransform: "uppercase",
         fontFamily: 'AssistantMedium',
         textAlign:'center',
@@ -77,16 +78,16 @@ const styles = StyleSheet.create({
         margin:15,
     },
     Images: {
-        width: 250,
-        height: 350,
+        width: 50 + vw(35),
+        height: 100 + vh(85),
     },
     ImageContainer: {
         flexDirection: "row",
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         flexWrap: 'wrap',
     },
     PartContainer: {
-        margin: 20,
+        margin: '1%',
         justifyContent:'center',
         alignItems:'center',
     }

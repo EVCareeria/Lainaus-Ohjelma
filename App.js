@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { ScannerStack } from './components/Homescreen';
@@ -6,23 +6,22 @@ import Guide from './components/Guide';
 
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
+import {ScreenOrientationInfo} from 'expo-screen-orientation'
 
 
 export default function App() {
-
   let [fontLoaded, error] = useFonts({
-    RobotoMedium: require('./assets/fonts/Roboto-Medium.ttf'),
-    RobotoMono: require('./assets/fonts/RobotoMono-ExtraLight.ttf'),
-    AssistantLight: require('./assets/fonts/Assistant-Light.ttf'),
-    AssistantMedium: require('./assets/fonts/Assistant-Medium.ttf'),
-  })
+    RobotoMedium: require('./assets/Fonts/Roboto-Medium.ttf'),
+    RobotoMono: require('./assets/Fonts/RobotoMono-ExtraLight.ttf'),
+    AssistantLight: require('./assets/Fonts/Assistant-Light.ttf'),
+    AssistantMedium: require('./assets/Fonts/Assistant-Medium.ttf'),
+  });
 
   if(!fontLoaded) {
     return <AppLoading />
   }
 
   const Tab = createBottomTabNavigator();
-
     return (
       <NavigationContainer>
         <Tab.Navigator
@@ -38,6 +37,4 @@ export default function App() {
         </Tab.Navigator>
       </NavigationContainer>
     );
-  
-
 }

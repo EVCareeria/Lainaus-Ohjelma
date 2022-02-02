@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Button, FlatList, SafeAreaView, Modal, Alert, ScrollView, Image, Pressable } from 'react-native';
+import { Text, View, SafeAreaView, Modal, Alert, ScrollView,  Pressable } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { DatabaseConnection } from './database/Database';
 import { StyleSheet } from 'react-native';

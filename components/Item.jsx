@@ -4,6 +4,7 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
 import { DatabaseConnection } from './database/Database';
 import { vw, vh } from 'react-native-expo-viewport-units';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const db = DatabaseConnection.getConnection();
 
@@ -97,15 +98,16 @@ const Item = ({ navigation }) => {
   };
 
   return (
-    <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '80%' }}>
+    <ScrollView>
+    <View style={{display:'flex', flexDirection:'column', height:vh(100), justifyContent:'space-evenly', alignItems:'center', paddingBottom:vh(10),}}>
       <Image source={require('../assets/beach.jpg')} style={{ position: 'absolute', width: '100%', height: '150%' }} />
-      <View style={styles.TextInput}>
-        <Text style={styles.textheader}>Add item name</Text>
-        <TextInput value={name} onChangeText={name => setName(name)} style={{ fontSize: vw(4), fontWeight: '700', fontFamily: 'AssistantMedium', height: 50 }} />
+      <View  >
+        <Text style={styles.textheader} >Add item name</Text>
+        <TextInput value={name} onChangeText={name => setName(name)} style={{backgroundColor:'white', height:25 + vh(7), width:vw(90), borderRadius:20, borderWidth:3, fontSize: 15 + vh(2), textAlign:'center', marginBottom:20 + vh(4)}}  />
       </View>
       <Pressable onPress={() => setScanner(!scanner)} style={({pressed}) =>[{backgroundColor: pressed ? '#4d9484' : 'white'}, styles.Add ]} >
-        <View style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-          <Text style={styles.textheader}>Add item barcode</Text>
+        <View >
+          <Text style={styles.textheader} >Add item barcode</Text>
           {codeData ? <Text style={{ fontFamily: 'AssistantMedium', fontSize: vw(4) }}>Codedata: {codeData}</Text> : null}
           {codeType ? <Text style={{ fontFamily: 'AssistantMedium', fontSize: vw(4) }}>Codedata: {codeType}</Text> : null}
         </View>
@@ -116,9 +118,9 @@ const Item = ({ navigation }) => {
             transparent={true}
             visible={true}
           >
-            <View style={{ display: 'flex', flex: 6, justifyContent: 'center', height: '100%' }}>
+            <View >
               <Pressable onPress={() => setScanner(!scanner)} >
-                <Text style={{ display: 'flex', fontSize: 30, borderWidth: 2, textAlign: 'center', borderRadius: 15, padding: 15, backgroundColor: 'yellow', justifyContent: 'center' }}>Close this window</Text>
+                <Text >Close this window</Text>
               </Pressable>
               <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
@@ -138,26 +140,24 @@ const Item = ({ navigation }) => {
             transparent={true}
             visible={true}
           >
-            <View style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <Pressable style={{ backgroundColor: 'lightblue', width: '70%', display: 'flex', borderWidth: 5, borderRadius: 20, justifyContent: 'center' }} onPress={pickImage}>
-                <Text style={styles.textheader}>Pick an image from camera roll</Text>
+            <View >
+              <Pressable  onPress={pickImage}>
+                <Text >Pick an image from camera roll</Text>
               </Pressable>
               {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
             </View>
           </Modal>
         ) : null}
       </Pressable>
-        <Pressable onPress={() => updateFunction()} style={({pressed}) =>[{backgroundColor: pressed ? '#4d9484' : 'white'}, styles.Add ]}  >
-          <Text style={styles.textheader}>
+        <Pressable onPress={() => updateFunction()} style={({pressed}) =>[{backgroundColor: pressed ? '#4d9484' : 'white'}, styles.addItem ]}  >
+          <Text style={styles.textheader} >
             Add item
           </Text>
         </Pressable>
 
     </View>
+    </ScrollView>
   )
-
-
-
 
 }
 
@@ -167,13 +167,22 @@ const styles = StyleSheet.create({
   Add: {
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row',
+    flex:1,
     borderWidth: 3,
-    marginTop: '5%',
-    height: '30%',
-    width: '85%',
+    maxHeight:vh(20),
+    marginBottom: vh(5),
+    width: '90%',
     borderRadius: 20,
-    display: 'flex',
+  },
+  addItem: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex:1,
+    borderWidth: 3,
+    maxHeight:vh(10),
+    marginBottom: vh(2),
+    width: '90%',
+    borderRadius: 20,
   },
   TextInput: {
     justifyContent: 'center',
@@ -205,7 +214,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     margin: 2,
     fontFamily: 'RobotoMedium',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   textbottom: {
     color: '#111',
