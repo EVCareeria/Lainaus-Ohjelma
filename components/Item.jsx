@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { DatabaseConnection } from './database/Database';
 import { vw, vh } from 'react-native-expo-viewport-units';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useTheme } from '@react-navigation/native';
 
 const db = DatabaseConnection.getConnection();
 
@@ -18,6 +19,8 @@ const Item = ({ navigation }) => {
   const [scanned, setScanned] = useState(false);
   const [imagePicker, setImagePicker] = useState(false)
   const [image, setImage] = useState(null);
+
+  const { colors } = useTheme();
 
   useEffect(() => {
     (async () => {
@@ -100,9 +103,8 @@ const Item = ({ navigation }) => {
   return (
     <ScrollView>
     <View style={{display:'flex', flexDirection:'column', height:vh(100), justifyContent:'space-evenly', alignItems:'center', paddingBottom:vh(10),}}>
-      <Image source={require('../assets/beach.jpg')} style={{ position: 'absolute', width: '100%', height: '150%' }} />
       <View  >
-        <Text style={styles.textheader} >Add item name</Text>
+        <Text style={[styles.textheader, {color:colors.text}]} >Add item name</Text>
         <TextInput value={name} onChangeText={name => setName(name)} style={{backgroundColor:'white', height:25 + vh(7), width:vw(90), borderRadius:20, borderWidth:3, fontSize: 15 + vh(2), textAlign:'center', marginBottom:20 + vh(4)}}  />
       </View>
       <Pressable onPress={() => setScanner(!scanner)} style={({pressed}) =>[{backgroundColor: pressed ? '#4d9484' : 'white'}, styles.Add ]} >
@@ -118,7 +120,7 @@ const Item = ({ navigation }) => {
             transparent={true}
             visible={true}
           >
-            <View >
+            <View style={{flex: 1, width:400, height:400, zIndex:5}} >
               <Pressable onPress={() => setScanner(!scanner)} >
                 <Text >Close this window</Text>
               </Pressable>
@@ -140,8 +142,8 @@ const Item = ({ navigation }) => {
             transparent={true}
             visible={true}
           >
-            <View >
-              <Pressable  onPress={pickImage}>
+            <View style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Pressable style={{ backgroundColor: 'lightblue', width: '70%', aspectRatio: 10 / 2, display: 'flex', borderWidth: 5, borderRadius: 20, justifyContent: 'center', alignItems:'center' }}  onPress={pickImage}>
                 <Text >Pick an image from camera roll</Text>
               </Pressable>
               {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
@@ -209,7 +211,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     backgroundColor: '#f5f5f5'
   }, textheader: {
-    color: '#111',
     fontSize: vw(7),
     fontWeight: '700',
     margin: 2,

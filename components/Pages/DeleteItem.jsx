@@ -3,11 +3,14 @@ import { View, Alert, SafeAreaView, Image, Text, Pressable } from 'react-native'
 import { DatabaseConnection } from '../database/Database';
 import { vw, vh } from 'react-native-expo-viewport-units';
 import { StyleSheet } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 
 const db = DatabaseConnection.getConnection();
 
 const DeleteItem = (props) => {
   const [confirm, setConfirm] = useState()
+
+  const { colors } = useTheme();
 
   const { itemID, itemName, itemImage } = props
   
@@ -37,19 +40,19 @@ const DeleteItem = (props) => {
 
   return (
     <SafeAreaView style={StyleSheet.absoluteFillObject}>
-      <View style={{display:'flex', flex: 6, flexDirection: 'column', backgroundColor: 'white', justifyContent: 'center', paddingTop: '20%', paddingBottom: '20%' }}>
-        <Pressable onPress={returnBack} style={{ flex: 1, alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
+      <View style={{display:'flex', flex: 6, flexDirection: 'column', backgroundColor: colors.background, justifyContent: 'center', paddingTop: '20%', paddingBottom: '20%' }}>
+        <Pressable onPress={returnBack} style={{ flex: 1, alignContent: 'center', zIndex: 0 }}>
           <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: '3%', backgroundColor: 'yellow', opacity: 0.7 }}>Close this window</Text>
         </Pressable>
-        <Pressable onPress={deleteItem} style={{ flex: 1, alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
+        <Pressable onPress={deleteItem} style={{ flex: 1, alignContent: 'center', zIndex: 0 }}>
           <Text style={{ alignSelf: 'center', justifyContent: 'center', fontSize: 30, borderWidth: 2, borderRadius: 15, padding: '3%', backgroundColor: 'red', opacity: 0.7 }}>Delete this item</Text>
         </Pressable>
         <View style={{ flexDirection: 'row', padding: '2%', flex: 3 }}>
           <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'center', paddingBottom: '20%', width: '50%' }}>
-            <Text style={styles.textheader}>ID: </Text>
-            <Text style={styles.textbottom}>{itemID}</Text>
-            <Text style={styles.textheader}>Name: </Text>
-            <Text style={styles.textbottom}>{itemName}</Text>
+            <Text style={[styles.textheader, {color:colors.text}]}>ID: </Text>
+            <Text style={[styles.textbottom, {color:colors.text}]}>{itemID}</Text>
+            <Text style={[styles.textheader, {color:colors.text}]}>Name: </Text>
+            <Text style={[styles.textbottom, {color:colors.text}]}>{itemName}</Text>
           </View>
           <View style={{ flex: 2 }}>
             {props.itemImage ? <Image source={{ uri: itemImage }} style={styles.ImageStyle} /> : null}
@@ -62,14 +65,12 @@ const DeleteItem = (props) => {
 };
 const styles = StyleSheet.create({
   textheader: {
-    color: '#111',
     fontSize: 26,
     fontWeight: '700',
     margin: 2,
     fontFamily: 'RobotoMedium',
   },
   textbottom: {
-    color: '#111',
     fontSize: 22,
     fontFamily: 'AssistantMedium',
     textDecorationLine: 'underline',
@@ -91,7 +92,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center'
   }, PressableTextStyle: {
-    color: '#111',
     fontSize: 22,
     fontWeight: '500',
     margin: 2,

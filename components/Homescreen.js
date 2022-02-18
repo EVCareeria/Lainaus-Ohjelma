@@ -1,28 +1,14 @@
 import React, { useEffect } from 'react';
 import { View, Pressable, Text, StyleSheet, Image } from 'react-native';
 import { DatabaseConnection } from './database/Database';
-import { createStackNavigator } from '@react-navigation/stack';
-import Scanner from './Scanner';
-import Item from './Item';
-import ViewItems from './Pages/ViewItems';
+import { useTheme } from '@react-navigation/native';
+
 import { vw, vh } from 'react-native-expo-viewport-units';
-import * as ScreenOrientation from 'expo-screen-orientation';
-const Stack = createStackNavigator();
 
 const db = DatabaseConnection.getConnection();
 
-export function ScannerStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Scanner" component={Scanner} />
-      <Stack.Screen name="Item" component={Item} />
-      <Stack.Screen name="ViewItems" component={ViewItems} />
-    </Stack.Navigator>
-  );
-}
-
-const HomeScreen = ({ navigation }) => {
+export const HomeScreen = ({ navigation }) => {
+  const { colors } = useTheme();
 
   /*  useEffect(()=> {
       //Käytetään Tietokanta items nollaukseen / Used to empty items table from information
@@ -86,10 +72,9 @@ const HomeScreen = ({ navigation }) => {
 
 
   return (
-    <View style={styles.portrait} >
-      <Image source={require('../assets/BGimg.jpg')} style={{ position: 'absolute', width: '100%', height: '140%' }} />
+    <View style={[styles.portrait, {backgroundColor:colors.background}]} >
       <View styles={{flex:1}} >
-        <Text style={{textAlign: 'center', fontSize: vh(6), padding: '5%', textTransform: 'uppercase', fontFamily: 'RobotoMedium', color:'#4475f2', textShadowRadius:10, textShadowColor:'white'}} >HOME</Text>
+        <Text style={{textAlign: 'center', fontSize: vh(6), padding: '5%', textTransform: 'uppercase', fontFamily: 'RobotoMedium', color:colors.text, textShadowRadius:10, textShadowColor:'white'}} >HOME</Text>
       </View>
       <View style={{flex:2, width:vw(75), minHeight:vh(10), padding:vh(2)}} >
         <Pressable  onPress={() => navigation.navigate('Scanner')} style={({ pressed }) => [{ backgroundColor: pressed ? '#2b758a' : 'white' }, styles.PressableOn]}>
@@ -109,6 +94,7 @@ const HomeScreen = ({ navigation }) => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   portrait: {

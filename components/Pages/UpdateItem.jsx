@@ -6,6 +6,7 @@ import { vw, vh } from 'react-native-expo-viewport-units';
 
 
 import { DatabaseConnection } from '../database/Database'
+import { useTheme } from '@react-navigation/native';
 
 const db = DatabaseConnection.getConnection();
 
@@ -19,6 +20,8 @@ const UpdateItem = (props) => {
   const [imagePicker, setImagePicker] = useState(false)
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+
+  const {colors} = useTheme()
 
   let updateAllStates = (item_name, codetype, codedata, image) => {
     setItemName(item_name);
@@ -127,25 +130,25 @@ const UpdateItem = (props) => {
   };
 
   return (
-    <SafeAreaView style={StyleSheet.absoluteFillObject}>
-      <View style={{ flex: 6, backgroundColor: 'white', justifyContent: 'center' }}>
+    <SafeAreaView style={{width:'100%', height:'100%'}}>
+      <View style={{ flex: 6, backgroundColor: colors.background, justifyContent: 'center' }}>
         <View style={{ flex: 1, padding: 25 }}>
           <Pressable onPress={returnBack} style={{ alignContent: 'center', backgroundColor: 'white', zIndex: 0 }}>
             <Text style={{ textAlign: 'center', fontSize: 30, fontFamily: 'RobotoMedium', justifyContent: 'center', borderWidth: 2, borderRadius: 15, padding: 10, backgroundColor: 'yellow', opacity: 0.7 }}>Close this window</Text>
           </Pressable>
           <KeyboardAvoidingView
             style={{ flex: 1, justifyContent: 'space-between' }}>
-            <Text style={styles.textheader}>Change item name</Text>
+            <Text style={[styles.textheader, {color: colors.text}]}>Change item name</Text>
             <TextInput
               placeholder="Item name"
               value={itemName}
-              style={{ color: '#111', fontSize: 24, fontFamily: 'RobotoMedium', fontWeight: '500', textAlign: 'center' }}
+              style={{ color: colors.text, fontSize: 24, fontFamily: 'RobotoMedium', fontWeight: '500', textAlign: 'center' }}
               onChangeText={
                 (itemName) => setItemName(itemName)
               }
             />
-            <Text style={styles.textbottom}>Codetype: {codeType}</Text>
-            <Text style={styles.textbottom}>Codedata: {codeData}</Text>
+            <Text style={[styles.textbottom, {color: colors.text}]}>Codetype: {codeType}</Text>
+            <Text style={[styles.textbottom, {color: colors.text}]}>Codedata: {codeData}</Text>
             <Pressable onPress={() => setScanner(!scanner)} style={styles.PressableStyle}>
               <Text style={styles.PressableTextStyle}>Pick a new barcode</Text>
               {/* <TextInput value={itemName} onChangeText={text => setItemName({...itemName, code: text})} /> */}
@@ -201,7 +204,6 @@ const UpdateItem = (props) => {
 
 const styles = StyleSheet.create({
   textheader: {
-    color: '#111',
     fontSize: 26,
     fontWeight: '700',
     margin: 2,
@@ -210,7 +212,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   textbottom: {
-    color: '#111',
     fontSize: 22,
     fontFamily: 'AssistantMedium',
     textDecorationLine: 'underline',

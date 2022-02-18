@@ -7,6 +7,7 @@ import { vw, vh } from 'react-native-expo-viewport-units';
 import { DatabaseConnection } from '../database/Database';
 import moment from 'moment';
 import { FlatList } from 'react-native-gesture-handler';
+import { useTheme } from '@react-navigation/native';
 
 const db = DatabaseConnection.getConnection();
 
@@ -26,6 +27,8 @@ const LoanItem = (props) => {
   const [orderBox, setOrderBox] = useState(true)
   const [dbAdd, setDbAdd] = useState(false)
   const [updateStatus, setUpdateStatus] = useState(false)
+
+  const { colors } = useTheme();
 
   const { itemID, itemname, itemImage, loanstatus } = props
 
@@ -213,13 +216,13 @@ const LoanItem = (props) => {
   }
   return (
     <SafeAreaView style={StyleSheet.absoluteFill}>
-      <View style={{ flex: 12, backgroundColor: 'white' }}>
+      <View style={{ flex: 12, backgroundColor: colors.background }}>
         <Pressable onPress={returnBack} style={styles.modalPressableStyle}>
           <Text style={styles.ModalTextStyle}>Close this window</Text>
         </Pressable>
         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
           <View style={{ justifyContent: 'center' }}>
-            <Text style={styles.textheader}>Loan Item: {itemname}</Text>
+            <Text style={[styles.textheader, {color:colors.text}]}>Loan Item: {itemname}</Text>
           </View>
           {itemImage ? <Image source={{ uri: itemImage }} style={styles.ImageStyle} /> : null}
         </View>
@@ -244,11 +247,11 @@ const LoanItem = (props) => {
           </View>
         </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-          <Text style={styles.textheader}>Enter your name:</Text>
+          <Text style={[styles.textheader, {color:colors.text}]}>Enter your name:</Text>
           <TextInput
             placeholder="Loaner name"
             value={loaner}
-            style={{ fontSize: 22, textAlign: 'center' }}
+            style={{ fontSize: 22, textAlign: 'center', color:colors.text }}
             onChangeText={
               (loaner) => setLoaner(loaner)
             }
@@ -256,15 +259,15 @@ const LoanItem = (props) => {
         </View>
 
         <View style={{}}>
-          <Text style={{ fontSize: 22 }}>start date: {startDate ? inputStartDate : null} </Text>
-          <Text style={{ fontSize: 22 }}>end date:  {endDate ? inputEndDate : null}</Text>
+          <Text style={{ fontSize: 22, color:colors.text }}>start date: {startDate ? inputStartDate : null} </Text>
+          <Text style={{ fontSize: 22, color:colors.text }}>end date:  {endDate ? inputEndDate : null}</Text>
         </View>
         <View style={{ flex: 1, backgroundColor: loaned == 1 ? 'green' : 'null' }}>
           <Text style={{ fontSize: 20, justifyContent: 'center', textAlign: 'center' }}></Text>
         </View>
 
         <Pressable onPress={() => addToDB()} style={{ flex: 1, justifyContent: 'center' }}>
-          <Text style={{display:'flex', fontSize: 26, textAlign: 'center', borderWidth: 3, backgroundColor: 'rgba(238, 216, 182, 0.2)', }}>Set loan order</Text>
+          <Text style={{display:'flex', fontSize: 26, textAlign: 'center', borderWidth: 3, color:colors.text, backgroundColor: colors.primary, }}>Set loan order</Text>
         </Pressable>
         <View style={{ flex: 10 }}>
           <FlatList
@@ -275,10 +278,10 @@ const LoanItem = (props) => {
             }}
             renderItem={({ item }) => {
               return <View style={{ flexDirection: 'column', padding: 10, marginBottom: 10, borderRadius: 15, borderWidth: 3, }}>
-                <Text style={styles.textheader}> Startdate: {moment(item.startdate).format('MMMM Do YYYY, h:mm:ss a')}</Text>
-                <Text style={styles.textheader}> Enddate: {moment(item.enddate).format('MMMM Do YYYY, h:mm:ss a')}</Text>
+                <Text style={[styles.textheader, {color:colors.text}]}> Startdate: {moment(item.startdate).format('MMMM Do YYYY, h:mm:ss a')}</Text>
+                <Text style={[styles.textheader, {color:colors.text}]}> Enddate: {moment(item.enddate).format('MMMM Do YYYY, h:mm:ss a')}</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={styles.textheader}> Loaner: {item.loaner}</Text>
+                  <Text style={[styles.textheader, {color:colors.text}]}> Loaner: {item.loaner}</Text>
                   {loanstatus == item.loaner ?
                     <Pressable onPress={() => showConfirmDialog(item.loan_id)}>
                       <Text style={{ textAlign: 'right', fontSize: 24, margin: 2, color: 'red' }}>Return device</Text>

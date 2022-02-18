@@ -73,15 +73,15 @@ export default function Scanner({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={{ display: 'flex', flex: 6 }}>
+    <SafeAreaView style={{ display: 'flex', width:'100%', aspectRatio:2/1 }}>
         {scanned != true ? (
           <Modal
-            style={{ flex: 4 }}
+            style={{ flex: 6 }}
             animationType="slide"
             transparent={true}
             visible={true}
           >
-            <View style={{ display: 'flex', justifyContent: 'center', flex: 5 }}>
+            <View style={{ display: 'flex', width:'100%', aspectRatio: 10/15}}>
               <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={{ flex: 4, justifyContent: 'center' }}
@@ -92,7 +92,7 @@ export default function Scanner({ navigation }) {
       <Pressable onPress={() => setUpdate(!update)} style={{ flex: 1, justifyContent: 'center', borderWidth: 3, borderRadius: 15, margin: 15, borderColor: 'blue', marginTop: 20, backgroundColor:'#F6F4EC' }}>
         <Text style={{ textAlign: 'center', fontSize: 30, fontFamily: 'RobotoMedium' }}>Update current list</Text>
       </Pressable>
-      <View style={{display:'flex', flex: 11 }}>
+      <View style={{display:'flex', flex: 1 }}>
         <ScrollView fadingEdgeLength={100}>
           {flatListItems.map((i) => (
             <Pressable style={{display:'flex', flex: 2, margin: 3 }} key={i.item_id}>
